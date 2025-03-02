@@ -1,0 +1,153 @@
+#slideshow {
+  width: 100%;
+  max-width: 100vw; /* Ensures the section stays within the viewport */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+/* Top and bottom padding */
+  margin-bottom: 239px;
+}
+
+.slideshow-title {
+  font-size: 50px;
+  color: #000000;
+  text-align: center;
+  letter-spacing: 10px;
+  font-weight: 300;
+  margin-top: 0;
+  margin-bottom: 30px; /* Adjusted margin */
+}
+
+/* Carousel container */
+.entire-content {
+  width: 300px;
+  margin: auto;
+  perspective: 1200px;
+  position: relative;
+}
+
+/* Rotating 3D carousel */
+.content-carrousel {
+  width: 80%;
+  height: 50%;
+  position: relative;
+  animation: rotar 15s infinite linear;
+  transform-style: preserve-3d;
+}
+
+.content-carrousel:hover {
+  animation-play-state: paused;
+  cursor: pointer;
+}
+
+.content-carrousel figure {
+  width: 100%;
+  height: 120px;
+  border: 1px solid #3b444b;
+  overflow: hidden;
+  position: absolute;
+  transform-origin: center center;
+}
+
+/* Individual figure positioning */
+.content-carrousel figure:nth-child(1) {
+  transform: rotateY(0deg) translateZ(350px);
+}
+.content-carrousel figure:nth-child(2) {
+  transform: rotateY(40deg) translateZ(350px);
+}
+.content-carrousel figure:nth-child(3) {
+  transform: rotateY(80deg) translateZ(350px);
+}
+.content-carrousel figure:nth-child(4) {
+  transform: rotateY(120deg) translateZ(350px);
+}
+.content-carrousel figure:nth-child(5) {
+  transform: rotateY(160deg) translateZ(350px);
+}
+.content-carrousel figure:nth-child(6) {
+  transform: rotateY(200deg) translateZ(350px);
+}
+.content-carrousel figure:nth-child(7) {
+  transform: rotateY(240deg) translateZ(350px);
+}
+.content-carrousel figure:nth-child(8) {
+  transform: rotateY(280deg) translateZ(350px);
+}
+.content-carrousel figure:nth-child(9) {
+  transform: rotateY(320deg) translateZ(350px);
+}
+
+/* Image and shadow styling */
+.shadow {
+  position: absolute;
+  box-shadow: 0px 0px 20px 0px #000;
+  border-radius: 10px;
+}
+
+.content-carrousel img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  transition: transform 300ms;
+}
+
+.content-carrousel img:hover {
+  transform: scale(1.2);
+  transition: transform 300ms;
+}
+
+/* Keyframe for rotation */
+@keyframes rotar {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/* Subheading improvements */
+.sub-heading {
+  padding-top: 50px;
+  font-size: 18px;
+}
+
+
+@media (max-width: 840px) {
+  #slideshow {
+    padding: 20px 0;
+    margin-bottom: 150px; /* Reduce margin for mobile */
+  }
+html,body
+{
+    width: 150%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden; 
+}
+  .slideshow-title {
+    font-size: 30px; /* Smaller font size on mobile */
+    letter-spacing: 5px; /* Reduce spacing for smaller screens */
+  }
+
+  .entire-content {
+    width: 150px; /* Adjust carousel container width */
+  }
+
+  .content-carrousel {
+    width: 100%;
+    height: 40%; /* Adjust carousel height for mobile */
+  }
+
+  .content-carrousel figure {
+    height: 100px; /* Reduce figure height on mobile */
+  }
+
+  .shadow {
+    box-shadow: 0px 0px 10px 0px #000; /* clent, footer, header , banner, */
+  }
+}

@@ -1,0 +1,2712 @@
+
+
+
+jQuery(document).ready(function () {
+
+
+
+
+
+	// Header collapse expand
+	$(document).ready(function () {
+		//  sidebar top value set
+		// Find the height of the element with the class 'moodle-has-zindex'
+		var moodleHasZIndexHeight = $('.moodle-has-zindex').outerHeight();
+		var moodleHasZIndexHeight = moodleHasZIndexHeight - 20;
+		var moodleHasZIndexWidth = ''
+		function sidebarWidth() {
+			moodleHasZIndexWidth = $('.sidebar').outerWidth();
+			$('.brand').css('right', moodleHasZIndexWidth + 'px');
+		}
+
+		// External video mobile view sidebar
+		/* Simple appearence with animation AN-1*/
+		$(document).on('click', '.close-vide0-sidebar', function (event) {
+			$('.expand-bar').removeClass('sidebar-extend');
+			$('.mod-collapsed-sidebar').addClass('d-block');
+			$('.expand-bar').removeClass('sidebar-extend');
+			$('.mod-extended-sidebar').removeClass('d-block');
+		});
+		$(document).on('click', '.openSidebar', function (event) {
+			event.stopPropagation(); // Prevent this click from propagating to document click
+			$('.expand-bar').addClass('sidebar-extend');
+			$('.mod-collapsed-sidebar').removeClass('d-block');
+			$('.expand-bar').addClass('sidebar-extend');
+			$('.mod-extended-sidebar').addClass('d-block');
+		});
+
+
+
+		// alert(moodleHasZIndexWidth);
+		// Apply the height to the element with the class 'top-sidebar'
+		$('.sidebar').css('top', moodleHasZIndexHeight + 'px');
+
+
+		// Toggle sidebar on brand click
+		$('.brand').on('click', function (event) {
+			event.stopPropagation(); // Prevent this click from propagating to document click
+			$('.sidebar').toggleClass('sidebar-extend');
+			updateSidebarState();
+			// sidebarWidth();
+		});
+
+		// Close sidebar when clicking outside the sidebar
+		$(document).on('click', function (event) {
+			if (!$(event.target).closest('.sidebar').length && $('.sidebar').hasClass('sidebar-extend')) {
+				$('.sidebar').removeClass('sidebar-extend');
+
+				updateSidebarState();
+
+				// sidebarWidth();
+			}
+			if (!$(event.target).closest('.profile-card').length && $('.profile-card').hasClass('show-profile')) {
+				// alert('ok');
+				$('.profile-card').removeClass('show-profile');
+				updateProfile();
+			}
+
+			if (!$(event.target).closest('.info-wrap').length && $('.info-wrap').hasClass('active')) {
+				// alert('ok');
+				$('.info-wrap').removeClass('active');
+				$('.info-wrap-arrow').removeClass('active');
+				$('.activity-info').removeClass('active');
+			}
+		});
+
+		function updateSidebarState() {
+			// Check if sidebar has the class 'sidebar-extend'
+			if ($('.sidebar').hasClass('sidebar-extend')) {
+				// If yes, update the UI accordingly
+				// $('.brand svg').removeClass('fa-chevron-left').addClass('fa-chevron-right');
+
+				$('.brand').addClass('text-left');
+				if ($('body').hasClass('path-mod')) {
+
+					$('.info-wrap').removeClass('active');
+					$('.info-wrap-arrow').removeClass('active');
+					$('.activity-info').removeClass('active');
+
+					$('.mod-extended-sidebar').addClass('d-block');
+					$('.mod-collapsed-sidebar').removeClass('d-block');
+					// var elem = $("#course-section-active");
+					var elem = document.getElementById('course-section-active');
+					elem.scrollIntoView();
+				} else {
+					$('.nav-item__text').addClass('d-block');
+				}
+			} else {
+				// If no, update the UI accordingly
+				// $('.brand svg').removeClass('fa-chevron-right').addClass('fa-chevron-left');
+
+				$('.brand').removeClass('text-left');
+				if ($('body').hasClass('path-mod')) {
+					$('.mod-extended-sidebar').removeClass('d-block');
+					$('.mod-collapsed-sidebar').addClass('d-block');
+				} else {
+					$('.nav-item__text').removeClass('d-block');
+				}
+			}
+		}
+
+		// Toggle sidebar on brand click
+		$('.open-close').on('click', function (event) {
+			event.stopPropagation(); // Prevent this click from propagating to document click
+			$('.profile-card').toggleClass('show-profile');
+			updateProfile();
+			// sidebarWidth();
+		});
+
+		//Expand activity info on click
+		$('.activity-info').on('click', function (event) {
+			event.stopPropagation();
+			$('.info-wrap').toggleClass('active');
+			$('.info-wrap-arrow').toggleClass('active');
+			$('.activity-info').toggleClass('active');
+		});
+
+		$('.info-wrap .info-wrap-close').on('click', function (event) {
+			event.stopPropagation();
+			$('.info-wrap').removeClass('active');
+			$('.info-wrap-arrow').removeClass('active');
+			$('.activity-info').removeClass('active');
+		});
+
+		function updateProfile() {
+			// Check if sidebar has the class 'sidebar-extend'
+			if ($('.profile-card').hasClass('show-profile')) {
+				$('.profile-card').removeClass('d-none');
+			} else {
+				$('.profile-card').addClass('d-none');
+			}
+		}
+
+
+		//mod settings icon options overflow
+		$(window).scroll(function () {
+			if (window.location.href.indexOf("mod/quiz/edit.php") < 1) {
+				if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
+					$("#action-menu-2-menu").css("transform", "translate3d(-213px, 26px, 0px) !important");
+				}
+			}
+		})
+
+		if ($('body').hasClass('sysrole-learner') && (!$('body').hasClass('path-mod-tekforum') || !$('body').hasClass('path-mod-videoresponse'))) {
+			$("#page-header >.card:first-child").css("display", "none");
+			$("#page-navbar").css("display", "none");
+		} else {
+			$("header#header").css("display", "block");
+			$("header#page-header").css("display", "block");
+			$("#page-header >.card:first-child").css("display", "block");
+			$("#page-navbar").css("display", "block");
+			$(".custom-scroll").css("top", "55px");
+
+			if($('.block').hasClass('block_coursetimer')){
+				$('.course-category.decoration-none').css("margin-left", "18px");
+				$('.purchase-coures-name.theme-title-1').css("margin-left", "15px");
+			}
+		}
+
+		if ((window.location.href.indexOf("mod") > -1) && (window.location.href.indexOf("mod/quiz/edit.php") < 1)) {
+			$("#action-menu-2-menu").css({
+				"height": "550px",
+				"overflow": "auto"
+			});
+		}
+
+
+
+	});
+
+
+	if (location.pathname.match(/fullcpgrid/i) ? true : false) {
+		document.documentElement.style.fontSize = "32px"
+		document.querySelector(".secondnav").style.display = "flex";
+		setTimeout(function () {
+			document.querySelector(".mainnav").classList.add("demoanim");
+		}, 500);
+	}
+
+
+	// Path details page
+	if ($('body').find('.main-path-details').length !== 0) {
+
+		$(".my-rating-load").starRating({
+			starSize: 20,
+			activeColor: '#f94452',
+			readOnly: true,
+		});
+
+
+		// carousel
+		$('.owl-carousel-1').owlCarousel({
+			// stagePadding: 100,
+			loop: false,
+			margin: 10,
+			nav: true,
+			dots: false,
+			autoplay: false,
+			responsive: {
+				0: {
+					items: 1
+				},
+				600: {
+					items: 1
+				},
+				1000: {
+					items: 4
+				}
+			}
+		});
+
+		// carousel active
+		$('.owl-carousel-1').on('click', '.item .active-carousel', function () {
+			$('.active-carousel').removeClass('active-carousel-color');
+			$(this).addClass('active-carousel-color');
+			$('.item').find('.down-arrow').addClass('d-none');
+			$(this).parent('.item').find('.down-arrow').removeClass('d-none');
+
+		});
+
+		// video stopped on close modal
+		// $("#videoModal").on('hidden.bs.modal', function (e) {
+		$('.close-video').click(function () {
+			$('#videoModal').removeClass('show');
+			$('#videoModal').removeClass('fade');
+			$("#videoModal iframe").attr("src", "");
+		});
+		// })
+		$('#samplevideo').click(function () {
+			$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+				action: 'getvideourl'
+			}).done(function (data, textStatus, jqXHR) {
+				$('#videoModal').addClass('show');
+				$("#videoModal iframe").attr("src", data.url);
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+			})
+		});
+		$('.path-video').click(function () {
+			$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+				action: 'getvideourl'
+			}).done(function (data, textStatus, jqXHR) {
+				$('#videoModal').addClass('show');
+				$("#videoModal iframe").attr("src", data.url);
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+			})
+
+		});
+
+		$('#samplecoursevideo').click(function () {
+			$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+				action: 'getvideourl'
+			}).done(function (data, textStatus, jqXHR) {
+				$('#videoModal').addClass('show');
+				$("#videoModal iframe").attr("src", data.url);
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+			})
+		});
+		$('.course-video').click(function () {
+			$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+				action: 'getvideourl'
+			}).done(function (data, textStatus, jqXHR) {
+				$('#videoModal').addClass('show');
+				$("#videoModal iframe").attr("src", data.url);
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+			})
+
+		});
+		$('#path-detail-tabsec').on('click', '#ins-click', function () {
+			$('.loader-path').removeClass('d-none');
+			var courseid = $(this).attr('value');
+			$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+				action: 'getinstructor'
+			}).done(function (data, textStatus, jqXHR) {
+				var inssec = `<!-- Instructors -->
+	<div class="instrctor-section mt-3">
+		<div class="details-card p-2 mb-3">
+			<div class="row">
+				<div class="col-md-3">
+					<div class="instrctor-image">
+						<img class="w-100" src="`+ data.prof1 + `"?w=200" alt="Instructor">
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div class="theme-title-1 purchased mt-3">
+						<h6 class="">Dr Matthew Yee-King</h6>
+						<p class="mb-3">Academic Director, Assistant Professor of Computer Technology</p>
+						<p class="mb-3">Academic in the Department of Computing at Goldsmiths. As the project manager for the €3m PRAISE research project, he managed the development and trialling of innovative education technology, including media annotation systems. He has also carried out research into audio analysis and creative applications of machine learning, including a series of commissioned musical AI systems.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="details-card p-2 mb-3">
+			<div class="row">
+				<div class="col-md-3">
+					<div class="instrctor-image">
+						<img class="w-100" src="`+ data.prof2 + `"?w=200" alt="Instructor">
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div class="theme-title-1 purchased mt-3">
+						<h6 class="">Dr Matthew Yee-King</h6>
+						<p class="mb-3">Academic Director, Assistant Professor of Computer Technology</p>
+						<p class="mb-3">Academic in the Department of Computing at Goldsmiths. As the project manager for the €3m PRAISE research project, he managed the development and trialling of innovative education technology, including media annotation systems. He has also carried out research into audio analysis and creative applications of machine learning, including a series of commissioned musical AI systems.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>`;
+				$('.loader-path').addClass('d-none');
+				$('#onclick-sec').empty().append(inssec);
+				$('#path-detail-tabsec .active').removeClass('active');
+				$('#path-detail-tabsec #ins-click').addClass('active');
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+
+			})
+		});
+		$('#path-detail-tabsec').on('click', '#review-click', function () {
+			$('.loader-path').removeClass('d-none');
+			var courseid = $(this).attr('value');
+			$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+				action: 'getreviewrating'
+			}).done(function (data, textStatus, jqXHR) {
+				var revsec = `<!-- review tab section -->
+	<div class="review-tab mt-4">
+	<div class="row">
+	<div class="col-md-4">
+	<div class="details-card p-2 mb-3">
+	<div class="theme-title-1 purchased text-center mt-3">
+	<h6>Ratings & Reviews</h6>
+	<div class="my-rating d-inline mr-2" data-rating="2.5"></div><h6 class="d-inline mt-2"> 2.5</h6>
+	</div>
+	<div class="rating-progress mt-3">
+	<div class="row align-items-baseline w-100">
+	<div class="col-md-2 text-center pr-0">
+	<div class="rating-value">
+	<p>5 <i class="fa fa-star" aria-hidden="true"></i></p>
+	</div>
+	</div>
+	<div class="col-md-9 p-0">
+	<div class="range-bar purchased">
+	<span class="progress custom-color-progress">
+	<div class="progress-bar active-progress" role="progressbar" style="width: 90%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+	</span>
+	</div>
+	</div>
+	<div class="col-md-1">
+	<div class="theme-title-1">
+	<p>112</p>
+	</div>
+	</div>
+	</div>
+	<div class="row align-items-baseline w-100">
+	<div class="col-md-2 text-center pr-0">
+	<div class="rating-value">
+	<p>4 <i class="fa fa-star" aria-hidden="true"></i></p>
+	</div>
+	</div>
+	<div class="col-md-9 p-0">
+	<div class="range-bar purchased">
+	<span class="progress custom-color-progress">
+	<div class="progress-bar active-progress" role="progressbar" style="width: 70%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+	</span>
+	</div>
+	</div>
+	<div class="col-md-1">
+	<div class="theme-title-1">
+	<p>80</p>
+	</div>
+	</div>
+	</div>
+
+	<div class="row align-items-baseline w-100">
+	<div class="col-md-2 text-center pr-0">
+	<div class="rating-value">
+	<p>3 <i class="fa fa-star" aria-hidden="true"></i></p>
+	</div>
+	</div>
+	<div class="col-md-9 p-0">
+	<div class="range-bar purchased">
+	<span class="progress custom-color-progress">
+	<div class="progress-bar active-progress" role="progressbar" style="width: 50%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+	</span>
+	</div>
+	</div>
+	<div class="col-md-1">
+	<div class="theme-title-1">
+	<p>100</p>
+	</div>
+	</div>
+	</div>
+
+	<div class="row align-items-baseline w-100">
+	<div class="col-md-2 text-center pr-0">
+	<div class="rating-value">
+	<p>2 <i class="fa fa-star" aria-hidden="true"></i></p>
+	</div>
+	</div>
+	<div class="col-md-9 p-0">
+	<div class="range-bar purchased">
+	<span class="progress custom-color-progress">
+	<div class="progress-bar active-progress" role="progressbar" style="width: 30%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+	</span>
+	</div>
+	</div>
+	<div class="col-md-1">
+	<div class="theme-title-1">
+	<p>8</p>
+	</div>
+	</div>
+	</div>
+
+	<div class="row align-items-baseline w-100">
+	<div class="col-md-2 text-center pr-0">
+	<div class="rating-value">
+	<p>1 <i class="fa fa-star" aria-hidden="true"></i></p>
+	</div>
+	</div>
+	<div class="col-md-9 p-0">
+	<div class="range-bar purchased">
+	<span class="progress custom-color-progress">
+	<div class="progress-bar active-progress" role="progressbar" style="width: 10%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+	</span>
+	</div>
+	</div>
+	<div class="col-md-1">
+	<div class="theme-title-1">
+	<p>2</p>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+
+	<div class="col-md-8">
+	<div class="review-comments">
+	<div class="section-grid">
+	<div class="row">
+	<div class="col-md-2 m-auto text-center pr-0">
+	<div class="reviewer-image w-100">
+	<img src="https://img.freepik.com/free-photo/close-up-young-successful-man-smiling-camera-standing-casual-outfit-against-blue-background_1258-66609.jpg?w=200">
+	</div>
+	</div>
+	<div class="col-md-10 pl-0">
+	<div class="review-content">
+	<div class="d-flex justify-content-between align-items-baseline">
+	<div class="theme-title-1 purchased mt-3">
+	<h6 class="">Shivani Sinha</h6>
+	<p class="mb-2">Posted 2 weeks ago</p>
+	</div>
+	<div class="review-rating-star">
+	<div class="my-rating d-inline" data-rating="2.5"></div>
+	</div>
+	</div>
+	<div class="theme-title-1 purchased mt-0">
+	<p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Volutpat lectus magna congue arcu aliquam aliquam aliquam platea. Feugiat netus nunc suscipit duis nibh.</p>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	<div class="purchase-line"><hr></div>
+	<div class="section-grid">
+	<div class="row">
+	<div class="col-md-2 m-auto text-center pr-0">
+	<div class="reviewer-image w-100">
+	<img src="https://img.freepik.com/free-photo/close-up-young-successful-man-smiling-camera-standing-casual-outfit-against-blue-background_1258-66609.jpg?w=200">
+	</div>
+	</div>
+	<div class="col-md-10 pl-0">
+	<div class="review-content">
+	<div class="d-flex justify-content-between align-items-baseline">
+	<div class="theme-title-1 purchased mt-3">
+	<h6 class="">Shivani Sinha</h6>
+	<p class="mb-2">Posted 2 weeks ago</p>
+	</div>
+	<div class="review-rating-star">
+	<div class="my-rating d-inline" data-rating="2.5"></div>
+	</div>
+	</div>
+	<div class="theme-title-1 purchased mt-0">
+	<p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Volutpat lectus magna congue arcu aliquam aliquam aliquam platea. Feugiat netus nunc suscipit duis nibh.</p>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>`;
+				$('.loader-path').addClass('d-none');
+				$('#onclick-sec').empty().append(revsec);
+				$('#path-detail-tabsec .active').removeClass('active');
+				$('#path-detail-tabsec #review-click').addClass('active');
+				star_rating_call();
+				$(".my-rating").starRating({
+					starSize: 20,
+					activeColor: '#f94452',
+					readOnly: true,
+				});
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+
+			})
+		});
+		$('#path-detail-tabsec').on('click', '#course-click', function () {
+			$('.loader-path').removeClass('d-none');
+			var pathid = $(this).attr('value');
+			$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+				action: 'getpathcourse',
+				pathid: pathid
+			}).done(function (data, textStatus, jqXHR) {
+				var clicksec = '<!-- Course tab section content --> <div class="row">';
+				$.each(data.lp_lessions, function (key, value) {
+					clicksec += `
+			<div class="col-md-4 mb-4">
+				<div class="details-card p-2">
+					<div class="course-section-layout">
+						<div class="theme-title-1 purchased mt-3">
+							<h6 class="currsor-point hide-title">${value.coursename}</h6>
+							<div class="my-rating d-inline" data-rating="2.5"></div><p class="d-inline"> (180)</p>
+							<div class="course-category mt-2">
+								<h5 class="d-inline blut_course">Course</h5>
+								<p class="d-inline">| 4 Activities | 5-6 weeks</p>
+							</div>
+							<div class="purchase-line"><hr></div>
+							<p class="mt-2 hide-title tip" data-tip="tip-first" >${value.coursedesc}</p>
+							<div class="d-flex justify-content-between align-items-baseline theme-title-1">
+								<div class="price-details">
+									<h6 class="d-inline">₹ 799</h6>
+									<p class="d-inline" style="text-decoration: line-through;"> ₹ 2900</p>
+								</div>
+								<div class="add-to-cart">
+									<button class="btn btn-primary mr-3">Add to cart</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="tip-first" class="hidden text-left theme-title-1 tip-content details-card">
+				<p class="text-left mb-0">${value.coursedesc}</p>
+			</div>`;
+				})
+				clicksec += `</div>`;
+				$('.loader-path').addClass('d-none');
+				$('#onclick-sec').empty().append(clicksec);
+				$('#path-detail-tabsec .active').removeClass('active');
+				$('#path-detail-tabsec #course-click').addClass('active');
+				star_rating_call();
+				$(".my-rating").starRating({
+					starSize: 20,
+					activeColor: '#f94452',
+					readOnly: true,
+				});
+
+				// Tooltips
+				setTimeout(function () {
+					$('.tip').each(function () {
+						$(this).tooltip(
+							{
+								html: true,
+								placement: 'right',
+								title: $('#' + $(this).data('tip')).html()
+							});
+					});
+				}, 1000);
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+
+			})
+
+		});
+		$('.cardblock').on('click', function () {
+			$('.loade-section loader-path').removeClass('d-none');
+
+			var checkpath = $(this).attr('value');
+			var pathArray = checkpath.split("-");
+			var tabsec = '';
+			if (pathArray[1] == 'course') {
+
+				tabsec = `<div class="purchase-line"><hr></div>
+	<div class="path_tab_block" id="yui_3_17_2_1_1659500646878_21">
+		<div id="path_tab_inside" class="d-flex justify-content-between" id="yui_3_17_2_1_1659500646878_20">
+			<h3 id="ins-click" class="mr-5 ml-3 path_tab" value="`+ pathArray[0] + `"><span id="yui_3_17_2_1_1659500646878_26">Instructors</span></h3>
+			<h3  id="review-click" class="mr-5 ml-3 path_tab" value="`+ pathArray[0] + `"><span>Reviews</span></h3>
+		</div>
+	</div>
+	<div class="purchase-line"><hr></div>
+	`;
+			}
+			else {
+				tabsec = `<div class="purchase-line"><hr></div>
+<div class="path_tab_block" id="yui_3_17_2_1_1659500646878_21">
+	<div id="path_tab_inside" class="d-flex justify-content-between" id="yui_3_17_2_1_1659500646878_20">
+		<h3 id="course-click" class="mr-5 path_tab active" value="`+ pathArray[0] + `"><span>Courses</span></h3>
+		<h3 id="ins-click" class="mr-5 ml-3 path_tab" value="`+ pathArray[0] + `"><span id="yui_3_17_2_1_1659500646878_26">Instructors</span></h3>
+		<h3  id="review-click" class="mr-5 ml-3 path_tab" value="`+ pathArray[0] + `"><span>Reviews</span></h3>
+	</div>
+</div>
+<div class="purchase-line"><hr></div>
+`;
+			}
+			$('.loade-section .loader-path').addClass('d-none');
+			$('#path-detail-tabsec').empty().append(tabsec);
+			if (pathArray[1] == 'course') {
+				jQuery("#ins-click").trigger("click");
+			}
+			else {
+				jQuery("#course-click").trigger("click");
+			}
+		});
+
+		$('.path_tab_block').on('click', '#coursedet-rev', function () {
+			$('.courseloader-section .loader-path').removeClass('d-none');
+			var courseid = $(this).attr('value');
+			$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+				action: 'getreviewrating'
+			}).done(function (data, textStatus, jqXHR) {
+				var revcour = `<!-- review tab section -->
+<div class="review-tab mt-4">
+<div class="row">
+<div class="col-md-4">
+<div class="details-card p-2 mb-3">
+<div class="theme-title-1 purchased text-center mt-3">
+<h6>Ratings & Reviews</h6>
+<div class="my-rating d-inline mr-2" data-rating="2.5"></div><h6 class="d-inline mt-2"> 2.5</h6>
+</div>
+<div class="rating-progress mt-3">
+<div class="row align-items-baseline w-100">
+<div class="col-md-2 text-center pr-0">
+<div class="rating-value">
+<p>5 <i class="fa fa-star" aria-hidden="true"></i></p>
+</div>
+</div>
+<div class="col-md-9 p-0">
+<div class="range-bar purchased">
+<span class="progress custom-color-progress">
+<div class="progress-bar active-progress" role="progressbar" style="width: 90%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+</span>
+</div>
+</div>
+<div class="col-md-1">
+<div class="theme-title-1">
+<p>112</p>
+</div>
+</div>
+</div>
+<div class="row align-items-baseline w-100">
+<div class="col-md-2 text-center pr-0">
+<div class="rating-value">
+<p>4 <i class="fa fa-star" aria-hidden="true"></i></p>
+</div>
+</div>
+<div class="col-md-9 p-0">
+<div class="range-bar purchased">
+<span class="progress custom-color-progress">
+<div class="progress-bar active-progress" role="progressbar" style="width: 70%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+</span>
+</div>
+</div>
+<div class="col-md-1">
+<div class="theme-title-1">
+<p>80</p>
+</div>
+</div>
+</div>
+
+<div class="row align-items-baseline w-100">
+<div class="col-md-2 text-center pr-0">
+<div class="rating-value">
+<p>3 <i class="fa fa-star" aria-hidden="true"></i></p>
+</div>
+</div>
+<div class="col-md-9 p-0">
+<div class="range-bar purchased">
+<span class="progress custom-color-progress">
+<div class="progress-bar active-progress" role="progressbar" style="width: 50%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+</span>
+</div>
+</div>
+<div class="col-md-1">
+<div class="theme-title-1">
+<p>100</p>
+</div>
+</div>
+</div>
+
+<div class="row align-items-baseline w-100">
+<div class="col-md-2 text-center pr-0">
+<div class="rating-value">
+<p>2 <i class="fa fa-star" aria-hidden="true"></i></p>
+</div>
+</div>
+<div class="col-md-9 p-0">
+<div class="range-bar purchased">
+<span class="progress custom-color-progress">
+<div class="progress-bar active-progress" role="progressbar" style="width: 30%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+</span>
+</div>
+</div>
+<div class="col-md-1">
+<div class="theme-title-1">
+<p>8</p>
+</div>
+</div>
+</div>
+
+<div class="row align-items-baseline w-100">
+<div class="col-md-2 text-center pr-0">
+<div class="rating-value">
+<p>1 <i class="fa fa-star" aria-hidden="true"></i></p>
+</div>
+</div>
+<div class="col-md-9 p-0">
+<div class="range-bar purchased">
+<span class="progress custom-color-progress">
+<div class="progress-bar active-progress" role="progressbar" style="width: 10%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+</span>
+</div>
+</div>
+<div class="col-md-1">
+<div class="theme-title-1">
+<p>2</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-8">
+<div class="review-comments">
+<div class="section-grid">
+<div class="row">
+<div class="col-md-2 m-auto text-center pr-0">
+<div class="reviewer-image w-100">
+<img src="https://img.freepik.com/free-photo/close-up-young-successful-man-smiling-camera-standing-casual-outfit-against-blue-background_1258-66609.jpg?w=200">
+</div>
+</div>
+<div class="col-md-10 pl-0">
+<div class="review-content">
+<div class="d-flex justify-content-between align-items-baseline">
+<div class="theme-title-1 purchased mt-3">
+<h6 class="">Shivani Sinha</h6>
+<p class="mb-2">Posted 2 weeks ago</p>
+</div>
+<div class="review-rating-star">
+<div class="my-rating d-inline" data-rating="2.5"></div>
+</div>
+</div>
+<div class="theme-title-1 purchased mt-0">
+<p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Volutpat lectus magna congue arcu aliquam aliquam aliquam platea. Feugiat netus nunc suscipit duis nibh.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="purchase-line"><hr></div>
+<div class="section-grid">
+<div class="row">
+<div class="col-md-2 m-auto text-center pr-0">
+<div class="reviewer-image w-100">
+<img src="https://img.freepik.com/free-photo/close-up-young-successful-man-smiling-camera-standing-casual-outfit-against-blue-background_1258-66609.jpg?w=200">
+</div>
+</div>
+<div class="col-md-10 pl-0">
+<div class="review-content">
+<div class="d-flex justify-content-between align-items-baseline">
+<div class="theme-title-1 purchased mt-3">
+<h6 class="">Shivani Sinha</h6>
+<p class="mb-2">Posted 2 weeks ago</p>
+</div>
+<div class="review-rating-star">
+<div class="my-rating d-inline" data-rating="2.5"></div>
+</div>
+</div>
+<div class="theme-title-1 purchased mt-0">
+<p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Volutpat lectus magna congue arcu aliquam aliquam aliquam platea. Feugiat netus nunc suscipit duis nibh.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>`;
+				$('.courseloader-section .loader-path').addClass('d-none');
+				$('#coursedetail-onclk').empty().append(revcour);
+				$('.path_tab_block .active').removeClass('active');
+				$('.path_tab_block #coursedet-rev').addClass('active');
+				star_rating_call();
+				$(".my-rating").starRating({
+					starSize: 20,
+					activeColor: '#f94452',
+					readOnly: true,
+				});
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+
+			})
+		});
+
+		$('.path_tab_block').on('click', '#coursedet-ins', function () {
+			$('.courseloader-section .loader-path').removeClass('d-none');
+			var courseid = $(this).attr('value');
+			$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+				action: 'getinstructor'
+			}).done(function (data, textStatus, jqXHR) {
+				var insseccour = `<!-- Instructors -->
+<div class="instrctor-section mt-3">
+<div class="details-card p-2 mb-3">
+<div class="row">
+	<div class="col-md-3">
+		<div class="instrctor-image">
+			<img class="w-100" src="https://img.freepik.com/free-photo/no-problem-concept-bearded-man-makes-okay-gesture-has-everything-control-all-fine-gesture-wears-spectacles-jumper-poses-against-pink-wall-says-i-got-this-guarantees-something_273609-42817.jpg?w=200" alt="Instructor">
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="theme-title-1 purchased mt-3">
+			<h6 class="">Dr Matthew Yee-King</h6>
+			<p class="mb-3">Academic Director, Assistant Professor of Computer Technology</p>
+			<p class="mb-3">Academic in the Department of Computing at Goldsmiths. As the project manager for the €3m PRAISE research project, he managed the development and trialling of innovative education technology, including media annotation systems. He has also carried out research into audio analysis and creative applications of machine learning, including a series of commissioned musical AI systems.</p>
+		</div>
+	</div>
+</div>
+</div>
+<div class="details-card p-2 mb-3">
+<div class="row">
+	<div class="col-md-3">
+		<div class="instrctor-image">
+			<img class="w-100" src="https://img.freepik.com/free-photo/no-problem-concept-bearded-man-makes-okay-gesture-has-everything-control-all-fine-gesture-wears-spectacles-jumper-poses-against-pink-wall-says-i-got-this-guarantees-something_273609-42817.jpg?w=200" alt="Instructor">
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="theme-title-1 purchased mt-3">
+			<h6 class="">Dr Matthew Yee-King</h6>
+			<p class="mb-3">Academic Director, Assistant Professor of Computer Technology</p>
+			<p class="mb-3">Academic in the Department of Computing at Goldsmiths. As the project manager for the €3m PRAISE research project, he managed the development and trialling of innovative education technology, including media annotation systems. He has also carried out research into audio analysis and creative applications of machine learning, including a series of commissioned musical AI systems.</p>
+		</div>
+	</div>
+</div>
+</div>
+</div>`;
+				$('.courseloader-section .loader-path').addClass('d-none');
+				$('#coursedetail-onclk').empty().append(insseccour);
+				$('.path_tab_block .active').removeClass('active');
+				$('.path_tab_block #coursedet-ins').addClass('active')
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+
+			})
+		});
+		function star_rating_call() {
+			// Create the defaults once
+			var pluginName = 'starRating';
+			var noop = function () { };
+			var defaults = {
+				totalStars: 5,
+				useFullStars: false,
+				starShape: 'straight',
+				emptyColor: 'lightgray',
+				hoverColor: 'orange',
+				activeColor: 'gold',
+				ratedColor: 'crimson',
+				useGradient: true,
+				readOnly: false,
+				disableAfterRate: true,
+				baseUrl: false,
+				starGradient: {
+					start: '#FEF7CD',
+					end: '#FF9511'
+				},
+				strokeWidth: 4,
+				strokeColor: 'black',
+				initialRating: 0,
+				starSize: 40,
+				callback: noop,
+				onHover: noop,
+				onLeave: noop
+			};
+
+			// The actual plugin constructor
+			var Plugin = function (element, options) {
+				var _rating;
+				var newRating;
+				var roundFn;
+
+				this.element = element;
+				this.$el = $(element);
+				this.settings = $.extend({}, defaults, options);
+
+				// grab rating if defined on the element
+				_rating = this.$el.data('rating') || this.settings.initialRating;
+
+				// round to the nearest half
+				roundFn = this.settings.forceRoundUp ? Math.ceil : Math.round;
+				newRating = (roundFn(_rating * 2) / 2).toFixed(1);
+				this._state = {
+					rating: newRating
+				};
+
+				// create unique id for stars
+				this._uid = Math.floor(Math.random() * 999);
+
+				// override gradient if not used
+				if (!options.starGradient && !this.settings.useGradient) {
+					this.settings.starGradient.start = this.settings.starGradient.end = this.settings.activeColor;
+				}
+
+				this._defaults = defaults;
+				this._name = pluginName;
+				this.init();
+			};
+
+			var methods = {
+				init: function () {
+					this.renderMarkup();
+					this.addListeners();
+					this.initRating();
+				},
+
+				addListeners: function () {
+					if (this.settings.readOnly) { return; }
+					this.$stars.on('mouseover', this.hoverRating.bind(this));
+					this.$stars.on('mouseout', this.restoreState.bind(this));
+					this.$stars.on('click', this.handleRating.bind(this));
+				},
+
+				// apply styles to hovered stars
+				hoverRating: function (e) {
+					var index = this.getIndex(e);
+					this.paintStars(index, 'hovered');
+					this.settings.onHover(index + 1, this._state.rating, this.$el);
+				},
+
+				// clicked on a rate, apply style and state
+				handleRating: function (e) {
+					var index = this.getIndex(e);
+					var rating = index + 1;
+
+					this.applyRating(rating, this.$el);
+					this.executeCallback(rating, this.$el);
+
+					if (this.settings.disableAfterRate) {
+						this.$stars.off();
+					}
+				},
+
+				applyRating: function (rating) {
+					var index = rating - 1;
+					// paint selected and remove hovered color
+					this.paintStars(index, 'rated');
+					this._state.rating = index + 1;
+					this._state.rated = true;
+				},
+
+				restoreState: function (e) {
+					var index = this.getIndex(e);
+					var rating = this._state.rating || -1;
+					// determine star color depending on manually rated
+					var colorType = this._state.rated ? 'rated' : 'active';
+					this.paintStars(rating - 1, colorType);
+					this.settings.onLeave(index + 1, this._state.rating, this.$el);
+				},
+
+				getIndex: function (e) {
+					var $target = $(e.currentTarget);
+					var width = $target.width();
+					var side = $(e.target).attr('data-side');
+					var minRating = this.settings.minRating;
+
+					// hovered outside the star, calculate by pixel instead
+					side = (!side) ? this.getOffsetByPixel(e, $target, width) : side;
+					side = (this.settings.useFullStars) ? 'right' : side;
+
+					// get index for half or whole star
+					var index = $target.index() - ((side === 'left') ? 0.5 : 0);
+
+					// pointer is way to the left, rating should be none
+					index = (index < 0.5 && (e.offsetX < width / 4)) ? -1 : index;
+
+					// force minimum rating
+					index = (minRating && minRating <= this.settings.totalStars && index < minRating) ? minRating - 1 : index;
+					return index;
+				},
+
+				getOffsetByPixel: function (e, $target, width) {
+					var leftX = e.pageX - $target.offset().left;
+					return (leftX <= (width / 2) && !this.settings.useFullStars) ? 'left' : 'right';
+				},
+
+				initRating: function () {
+					this.paintStars(this._state.rating - 1, 'active');
+				},
+
+				paintStars: function (endIndex, stateClass) {
+					var $polygonLeft;
+					var $polygonRight;
+					var leftClass;
+					var rightClass;
+					var s = this.settings;
+
+					$.each(this.$stars, function (index, star) {
+						$polygonLeft = $(star).find('[data-side="left"]');
+						$polygonRight = $(star).find('[data-side="right"]');
+						leftClass = rightClass = (index <= endIndex) ? stateClass : 'empty';
+
+						// has another half rating, add half star
+						leftClass = (index - endIndex === 0.5) ? stateClass : leftClass;
+
+						$polygonLeft.attr('class', 'svg-' + leftClass + '-' + this._uid);
+						$polygonRight.attr('class', 'svg-' + rightClass + '-' + this._uid);
+
+						// get color for level
+						var ratedColorsIndex = endIndex >= 0 ? Math.ceil(endIndex) : 0;
+
+						var ratedColor;
+						if (s.ratedColors && s.ratedColors.length && s.ratedColors[ratedColorsIndex]) {
+							ratedColor = s.ratedColors[ratedColorsIndex];
+						} else {
+							ratedColor = this._defaults.ratedColor;
+						}
+
+						// only override colors in rated stars and when rated number is valid
+						if (stateClass === 'rated' && endIndex > -1) {
+							// limit to painting only to rated stars, and specific case for half star
+							if (index <= Math.ceil(endIndex) || (index < 1 && endIndex < 0)) {
+								$polygonLeft.attr('style', 'fill:' + ratedColor);
+							}
+							if (index <= endIndex) {
+								$polygonRight.attr('style', 'fill:' + ratedColor);
+							}
+						}
+					}.bind(this));
+				},
+
+				renderMarkup: function () {
+					var s = this.settings;
+					var baseUrl = s.baseUrl ? location.href.split('#')[0] : '';
+
+					// inject an svg manually to have control over attributes
+					var star = '<div class="jq-star" style="width:' + s.starSize + 'px;  height:' + s.starSize + 'px;"><svg version="1.0" class="jq-star-svg" shape-rendering="geometricPrecision" xmlns="http://www.w3.org/2000/svg" ' + this.getSvgDimensions(s.starShape) + ' stroke-width:' + s.strokeWidth + 'px;" xml:space="preserve"><style type="text/css">.svg-empty-' + this._uid + '{fill:url(' + baseUrl + '#' + this._uid + '_SVGID_1_);}.svg-hovered-' + this._uid + '{fill:url(' + baseUrl + '#' + this._uid + '_SVGID_2_);}.svg-active-' + this._uid + '{fill:url(' + baseUrl + '#' + this._uid + '_SVGID_3_);}.svg-rated-' + this._uid + '{fill:' + s.ratedColor + ';}</style>' +
+
+						this.getLinearGradient(this._uid + '_SVGID_1_', s.emptyColor, s.emptyColor, s.starShape) +
+						this.getLinearGradient(this._uid + '_SVGID_2_', s.hoverColor, s.hoverColor, s.starShape) +
+						this.getLinearGradient(this._uid + '_SVGID_3_', s.starGradient.start, s.starGradient.end, s.starShape) +
+						this.getVectorPath(this._uid, {
+							starShape: s.starShape,
+							strokeWidth: s.strokeWidth,
+							strokeColor: s.strokeColor
+						}) +
+						'</svg></div>';
+
+					// inject svg markup
+					var starsMarkup = '';
+					for (var i = 0; i < s.totalStars; i++) {
+						starsMarkup += star;
+					}
+					this.$el.append(starsMarkup);
+					this.$stars = this.$el.find('.jq-star');
+				},
+
+				getVectorPath: function (id, attrs) {
+					return (attrs.starShape === 'rounded') ?
+						this.getRoundedVectorPath(id, attrs) : this.getSpikeVectorPath(id, attrs);
+				},
+
+				getSpikeVectorPath: function (id, attrs) {
+					return '<polygon data-side="center" class="svg-empty-' + id + '" points="281.1,129.8 364,55.7 255.5,46.8 214,-59 172.5,46.8 64,55.4 146.8,129.7 121.1,241 212.9,181.1 213.9,181 306.5,241 " style="fill: transparent; stroke: ' + attrs.strokeColor + ';" />' +
+						'<polygon data-side="left" class="svg-empty-' + id + '" points="281.1,129.8 364,55.7 255.5,46.8 214,-59 172.5,46.8 64,55.4 146.8,129.7 121.1,241 213.9,181.1 213.9,181 306.5,241 " style="stroke-opacity: 0;" />' +
+						'<polygon data-side="right" class="svg-empty-' + id + '" points="364,55.7 255.5,46.8 214,-59 213.9,181 306.5,241 281.1,129.8 " style="stroke-opacity: 0;" />';
+				},
+
+				getRoundedVectorPath: function (id, attrs) {
+					var fullPoints = 'M520.9,336.5c-3.8-11.8-14.2-20.5-26.5-22.2l-140.9-20.5l-63-127.7 c-5.5-11.2-16.8-18.2-29.3-18.2c-12.5,0-23.8,7-29.3,18.2l-63,127.7L28,314.2C15.7,316,5.4,324.7,1.6,336.5S1,361.3,9.9,370 l102,99.4l-24,140.3c-2.1,12.3,2.9,24.6,13,32c5.7,4.2,12.4,6.2,19.2,6.2c5.2,0,10.5-1.2,15.2-3.8l126-66.3l126,66.2 c4.8,2.6,10,3.8,15.2,3.8c6.8,0,13.5-2.1,19.2-6.2c10.1-7.3,15.1-19.7,13-32l-24-140.3l102-99.4 C521.6,361.3,524.8,348.3,520.9,336.5z';
+
+					return '<path data-side="center" class="svg-empty-' + id + '" d="' + fullPoints + '" style="stroke: ' + attrs.strokeColor + '; fill: transparent; " /><path data-side="right" class="svg-empty-' + id + '" d="' + fullPoints + '" style="stroke-opacity: 0;" /><path data-side="left" class="svg-empty-' + id + '" d="M121,648c-7.3,0-14.1-2.2-19.8-6.4c-10.4-7.6-15.6-20.3-13.4-33l24-139.9l-101.6-99 c-9.1-8.9-12.4-22.4-8.6-34.5c3.9-12.1,14.6-21.1,27.2-23l140.4-20.4L232,164.6c5.7-11.6,17.3-18.8,30.2-16.8c0.6,0,1,0.4,1,1 v430.1c0,0.4-0.2,0.7-0.5,0.9l-126,66.3C132,646.6,126.6,648,121,648z" style="stroke: ' + attrs.strokeColor + '; stroke-opacity: 0;" />';
+				},
+
+				getSvgDimensions: function (starShape) {
+					return (starShape === 'rounded') ? 'width="550px" height="500.2px" viewBox="0 146.8 550 500.2" style="enable-background:new 0 0 550 500.2;' : 'x="0px" y="0px" width="305px" height="305px" viewBox="60 -62 309 309" style="enable-background:new 64 -59 305 305;';
+				},
+
+				getLinearGradient: function (id, startColor, endColor, starShape) {
+					var height = (starShape === 'rounded') ? 500 : 250;
+					return '<linearGradient id="' + id + '" gradientUnits="userSpaceOnUse" x1="0" y1="-50" x2="0" y2="' + height + '"><stop  offset="0" style="stop-color:' + startColor + '"/><stop  offset="1" style="stop-color:' + endColor + '"/> </linearGradient>';
+				},
+
+				executeCallback: function (rating, $el) {
+					var callback = this.settings.callback;
+					callback(rating, $el);
+				}
+
+			};
+
+			var publicMethods = {
+
+				unload: function () {
+					var _name = 'plugin_' + pluginName;
+					var $el = $(this);
+					var $starSet = $el.data(_name).$stars;
+					$starSet.off();
+					$el.removeData(_name).remove();
+				},
+
+				setRating: function (rating, round) {
+					var _name = 'plugin_' + pluginName;
+					var $el = $(this);
+					var $plugin = $el.data(_name);
+					if (rating > $plugin.settings.totalStars || rating < 0) { return; }
+					if (round) {
+						rating = Math.round(rating);
+					}
+					$plugin.applyRating(rating);
+				},
+
+				getRating: function () {
+					var _name = 'plugin_' + pluginName;
+					var $el = $(this);
+					var $starSet = $el.data(_name);
+					return $starSet._state.rating;
+				},
+
+				resize: function (newSize) {
+					var _name = 'plugin_' + pluginName;
+					var $el = $(this);
+					var $starSet = $el.data(_name);
+					var $stars = $starSet.$stars;
+
+					if (newSize <= 1 || newSize > 200) {
+						console.error('star size out of bounds');
+						return;
+					}
+
+					$stars = Array.prototype.slice.call($stars);
+					$stars.forEach(function (star) {
+						$(star).css({
+							'width': newSize + 'px',
+							'height': newSize + 'px'
+						});
+					});
+				},
+
+				setReadOnly: function (flag) {
+					var _name = 'plugin_' + pluginName;
+					var $el = $(this);
+					var $plugin = $el.data(_name);
+					if (flag === true) {
+						$plugin.$stars.off('mouseover mouseout click');
+					} else {
+						$plugin.settings.readOnly = false;
+						$plugin.addListeners();
+					}
+				}
+
+			};
+
+
+			// Avoid Plugin.prototype conflicts
+			$.extend(Plugin.prototype, methods);
+
+			$.fn[pluginName] = function (options) {
+
+				// if options is a public method
+				if (!$.isPlainObject(options)) {
+					if (publicMethods.hasOwnProperty(options)) {
+						return publicMethods[options].apply(this, Array.prototype.slice.call(arguments, 1));
+					} else {
+						$.error('Method ' + options + ' does not exist on ' + pluginName + '.js');
+					}
+				}
+
+				return this.each(function () {
+					// preventing against multiple instantiations
+					if (!$.data(this, 'plugin_' + pluginName)) {
+						$.data(this, 'plugin_' + pluginName, new Plugin(this, options));
+					}
+				});
+			};
+		}
+
+	}
+
+	// Empty breadcrumb hide
+	if (($('#page-header').find('.card-body  .sr-only').length !== 0 || $('#page-header').find('.card-body .page-header-headings h1').is(':empty')) && $('body#page-my-index').length === 0) {
+		$('#page-header .card').addClass('d-none');
+	} else {
+		$('#page-header .card').removeClass('d-none');
+	}
+
+	var light_mode_url = $('#lightpiclogo').val();
+	var dark_mode_url = $('#darkpiclogo').val();
+
+	//Configure the theme as light mode. Remove this configuration once the color mode button is enabled.
+
+	// Onload get user theme
+	function getTheme() {
+		
+		// Forcing light theme for pages that do not support dark mode
+		var currentUrl = window.location.href;
+		if (currentUrl.includes("<URL Path without dark mode support>")) {
+			$('body').removeClass('dark-mode');
+			$('body').addClass('light-mode');
+			$("#color_mode").removeAttr('checked');
+			$('#logoid').attr("src", light_mode_url);
+			return;
+		}
+
+		$.post(M.cfg.wwwroot + "/theme/tekstac_theme/ajax.php", {
+			action: 'getuserpreferencedata', name: 'tek_theme_mode', value: ''
+		}).done(function (data, textStatus, jqXHR) {
+			// No action needed
+			console.log(data.resp);
+			if (data.resp == 'dark') {
+				// Call a function for dark mode
+				console.log('Dark mode activated');
+				$('.fa-moon-o').hide();
+				$('.fa-sun-o').show();
+			} else {
+				// Call a function for light mode
+				console.log('Light mode activated');
+				$('.fa-moon-o').show();
+				$('.fa-sun-o').hide();
+			}
+
+			setTheme(data.resp);
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			console.log(errorThrown);
+		});
+	}
+
+	getTheme();
+
+
+
+
+
+	// onload mode
+	// if (localStorage.getItem("mode_type") !== null) {
+	// 	// var locatl_theme = localStorage.getItem("mode_type");
+	// 	const locatl_theme = getCookie('mode_type');
+	// 	console.log(locatl_theme);
+	// 	setTheme(locatl_theme);
+	// } else {
+	// 	$('body').addClass('dark-mode');
+	// 	$('#logoid').attr("src", dark_mode_url);
+	// 	// Find the checkbox element by its ID
+	// 	const checkbox = document.getElementById('color_mode');
+
+	// 	// Check the checkbox
+	// 	checkbox.checked = true;
+	// }
+
+
+
+
+
+
+	var mode = '';
+	//Remove this command line once the color mode button is enabled.
+	const body = document.body;
+
+	$('#lightDarkMode').click(function () {
+
+		const themeToggle = $('#lightDarkMode');
+		const icons = document.querySelectorAll('.toggle-icon');
+
+		body.classList.toggle('dark-mode');
+		body.classList.toggle('light-mode');
+
+		icons.forEach(icon => icon.classList.toggle('hidden'));
+
+		if (body.classList.contains('dark-mode')) {
+			// Call a function for dark mode
+			console.log('Dark mode activated');
+			$('.fa-moon-o').hide();
+			$('.fa-sun-o').show();
+			setTheme('dark');
+		} else {
+			// Call a function for light mode
+			console.log('Light mode activated');
+			$('.fa-moon-o').show();
+			$('.fa-sun-o').hide();
+			setTheme('light');
+		}
+	})
+
+
+
+
+
+	// $("#color_mode").change(function () {
+	// 	if (this.checked) {
+	// 		// setCookie('mode_type', 'dark');
+	// 		// localStorage.setItem('mode_type', 'dark');
+	// 		setTheme('dark');
+	// 		// Find the checkbox element by its ID
+	// 		const checkbox = document.getElementById('color_mode');
+
+	// 		// Check the checkbox
+	// 		checkbox.checked = true;
+	// 	} else {
+	// 		// setCookie('mode_type', 'light');
+	// 		// localStorage.setItem('mode_type', 'light');
+	// 		setTheme('light');
+	// 	}
+
+	// });
+
+
+	// side nav-drawer icon rotate on expand
+	// onload
+	if ($('.custom-side-icon-symbol').attr('aria-expanded') === "true") {
+		$(this).find('svg.icon-rotate').removeClass('rotate');
+	} else {
+		$(this).find('svg.icon-rotate').addClass('rotate');
+
+	}
+	// onclick
+	$('.custom-side-icon-symbol').click(function () {
+		$(this).find('svg.icon-rotate').toggleClass('rotate');
+		$('body').toggleClass('add-margin');
+		$('[data-region="drawer"]').toggleClass('add-width');
+	});
+
+	$('.side-expand-icon').hover(function () {
+
+		$(this).attr('aria-expanded', 'true');
+		$(this).attr('aria-controls', 'nav-drawer');
+		$('#nav-drawer[data-region="drawer"]').css('width', $(".add-width").width() === 0 ? '285px' : '285px').prop('style', 'width: ' + ($(".add-width").width() === 0 ? '285px!important' : '285px!important'), '!important');
+
+		$(this).removeClass('d-flex').addClass('d-none');
+		setTimeout(function () {
+			$('#nav-drawer[data-region="drawer"]').addClass('add-hovered');
+		}, 500);
+		//$('body').toggleClass('add-margin');
+		//$('[data-region="drawer"]').addClass('add-width');
+		//$('[data-region="drawer"]').css("width", ($(".add-width").width() === 0 ? "285px!important" : "0px!important"));
+	});
+
+	$('#nav-drawer[data-region="drawer"]').mouseleave(function () {
+		if ($(this).hasClass('add-hovered')) {
+			$('.open-nav-bar').attr('aria-expanded', 'flase');
+			$('#nav-drawer[data-region="drawer"]').css('width', '0px', '!important');
+			setTimeout(function () {
+				$('.side-expand-icon').removeClass('d-none').addClass('d-flex');
+			}, 500);
+			$(this).removeClass('add-hovered')
+		}
+		//$('body').toggleClass('add-margin');
+		//$('[data-region="drawer"]').toggleClass('add-width');
+		//$('body').removeClass('add-margin');
+		//$('[data-region="drawer"]').removeClass('add-width');
+
+	});
+
+	// Dark and light theme
+	function setTheme(mode) {
+		if (mode == 'dark') {
+			$('body').removeClass('light-mode');
+			$('body').addClass('dark-mode');
+			$("#color_mode").attr('checked');
+			$('#logoid').attr("src", dark_mode_url);
+			// const checkbox = document.getElementById('color_mode');
+
+			// Check the checkbox
+			// checkbox.checked = true;
+
+			$.post(M.cfg.wwwroot + "/theme/tekstac_theme/ajax.php", {
+				action: 'setuserpreferencedata', name: 'tek_theme_mode', value: 'dark'
+			}).done(function (data, textStatus, jqXHR) {
+				// No action needed
+			}).fail(function (jqXHR, textStatus, errorThrown) { });
+
+		} else {
+			$('body').removeClass('dark-mode');
+			$('body').addClass('light-mode');
+			$("#color_mode").removeAttr('checked');
+			$('#logoid').attr("src", light_mode_url);
+			// const checkbox = document.getElementById('color_mode');
+
+			// Check the checkbox
+			// checkbox.checked = false;
+
+			$.post(M.cfg.wwwroot + "/theme/tekstac_theme/ajax.php", {
+				action: 'setuserpreferencedata', name: 'tek_theme_mode', value: 'light'
+			}).done(function (data, textStatus, jqXHR) {
+				// No action needed
+			}).fail(function (jqXHR, textStatus, errorThrown) { });
+		}
+
+	}
+
+
+	// Purchase page circle progress bar
+	$(".progress").each(function () {
+
+		var value = $(this).attr('data-value');
+		var left = $(this).find('.progress-left .progress-bar');
+		var right = $(this).find('.progress-right .progress-bar');
+
+		if (value > 0) {
+			if (value <= 50) {
+				right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+			} else {
+				right.css('transform', 'rotate(180deg)')
+				left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+			}
+		}
+
+	})
+
+	function percentageToDegrees(percentage) {
+
+		return percentage / 100 * 360
+
+	}
+
+	// Quiz attempt now trigger
+	$('.attempt-now').click(function () {
+		$(".quizstartbuttondiv").find(":button").trigger("click");
+	});
+
+	// Add Notes course page sidebar
+	$('.create-notes').on('click', function () {
+		$('.active-notes').toggleClass('d-block');
+	});
+
+
+	// Add notes tab based display notes div
+
+	// onload
+	var note_active = $('.get_tab_details.active').attr('value');
+	if (note_active == "tab_default_1") {
+		$('.hide-notes').addClass('d-none');
+	}
+	else {
+		$('.hide-notes').removeClass('d-none');
+	}
+
+	// onclick
+	$('.get_tab_details').click(function () {
+		$(this).addClass('active');
+		$('.get_tab_details').removeClass('active');
+		var note_active = $(this).attr('value');
+		if (note_active == "tab_default_1") {
+			$('.hide-notes').addClass('d-none');
+		}
+		else {
+			$('.hide-notes').removeClass('d-none');
+		}
+	})
+	// End Add notes tab based display notes
+
+
+	// function to render all user notes on load
+	function render_user_notes() {
+		$.post(M.cfg.wwwroot + "/theme/tekstac_theme/ajax.php", {
+			action: 'loadusernotes', contextid: M.cfg.contextid
+		}).done(function (data, textStatus, jqXHR) {
+			var $user_note_content = '';
+			$.each(data, function (key, value) {
+				$user_note_content += `<div class="notes-content">
+				                            <h6>${value.activityname}</h6>
+				                            <p class="edit-content-${value.noteid}">${value.content}</p>
+				                            <div class="notes-action d-flex justify-content-between mt-3">
+				                                <div class="action-icons currsor-point">
+				                                    <span class="editable-notes" id="note-edit-${value.noteid}" note-id="${value.noteid}"><i class="far fa-pen fa-fw"></i></span>
+				                                    <span class="deletable-notes" id="note-delete-${value.noteid}" note-id="${value.noteid}"><i class="far fa-trash fa-fw"></i></span>
+				                                </div>
+				                            </div>
+				                            <div class="d-none delete-action-confirm-${value.noteid} hide-block">
+				                            	<p>Are you sure want to delete?</p>
+				                            	<div class="d-flex justify-content-between">
+				                            		<button class="save-notes mr-2 confirm-notes" note-id="${value.noteid}">Confirm</button>
+				                            		<button class="save-notes cancel-notes" note-id="${value.noteid}">Cancel</button>
+				                            	</div
+				                            </div>
+				                        </div>
+				                        <hr>`;
+			});
+			$("#tab_default_2").empty().append($user_note_content);
+			// notes click
+			$('.editable-notes').on('click', function () {
+				var noteid = $(this).attr('note-id');
+
+				if ($(this).hasClass('save')) {
+					var new_note = $('.edit-content-' + noteid).text();
+					// update new note while edit
+					$.post(M.cfg.wwwroot + "/theme/tekstac_theme/ajax.php", {
+						action: 'editnote', noteid: noteid, newnotes: new_note
+					}).done(function (data, textStatus, jqXHR) {
+
+					}).fail(function (jqXHR, textStatus, errorThrown) { });
+
+					$(this).text("").append('<i class="far fa-pen fa-fw"></i>').removeClass('save');
+					$('.edit-content-' + noteid).attr('contenteditable', 'false').css({
+						'border': 'none',
+						'outline': 'none',
+						'padding': 0
+					});
+				} else {
+					$(this).text("Save").addClass('save');
+					$('.edit-content-' + noteid).attr('contenteditable', 'true').css({
+						'border': 'black solid 1px',
+						'outline': 'none',
+						'padding': '5px'
+					}).focus();
+				}
+			});
+
+			// delete notes
+			$('.deletable-notes').on('click', function () {
+				var noteid = $(this).attr('note-id');
+				$(this).addClass('delete');
+				$('.delete-action-confirm-' + noteid).removeClass('d-none');
+			});
+
+			$('.cancel-notes').click(function () {
+				var noteid = $(this).attr('note-id')
+				$('.delete-action-confirm-' + noteid).addClass('d-none');
+			})
+
+			$('.confirm-notes').click(function () {
+				var noteid = $(this).attr('note-id')
+				$.post(M.cfg.wwwroot + "/theme/tekstac_theme/ajax.php", {
+					action: 'deletenote', noteid: noteid
+				}).done(function (data, textStatus, jqXHR) {
+					$('.delete-action-confirm-' + noteid).addClass('d-none');
+					// reload user notes
+					render_user_notes();
+				}).fail(function (jqXHR, textStatus, errorThrown) { });
+			})
+
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			$("#tab_default_2").empty().append(`<div class="notes-content text-center"><h6>${jqXHR.responseText}</h6></div>`);
+		});
+	}
+	// calling user notes render function
+	render_user_notes();
+
+	// save user notes
+	$('#save-user-notes').on('click', function (e) {
+
+		var $user_notes = $('#exampleFormControlTextarea1').val();
+
+		if ($user_notes != '') {
+			e.preventDefault();
+			$('#save-user-notes').prop('disabled', true);
+			var arg = {
+				contextid: M.cfg.contextid,
+				content: $user_notes,
+				urllink: $(location).attr('href')
+			};
+
+			$.post(M.cfg.wwwroot + "/theme/tekstac_theme/ajax.php", {
+				action: 'addnote', data: JSON.stringify(arg)
+			}).done(function (data, textStatus, jqXHR) {
+				$('#exampleFormControlTextarea1').val('');
+				$('#save-user-notes').prop('disabled', false);
+				// reload user notes
+				render_user_notes();
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				$('#save-user-notes').prop('disabled', false);
+			});
+		}
+	});
+
+	// path overview
+	$(".path_tab").click(function () {
+		$(".path_tab").removeClass("active");
+		$(this).addClass("active");
+	});
+
+	// Path overview collapse
+	$('.course-category').click(function () {
+		var $this = $(this);
+		setTimeout(
+			function () {
+				if ($this.attr('aria-expanded') === "true") {
+					$this.closest(".panel-heading").addClass('active');
+				} else {
+					$this.closest(".panel-heading").removeClass('active');
+				}
+			}, 300);
+	});
+	$('.course-category').click(function () {
+		var $this = $(this);
+		setTimeout(
+			function () {
+				if ($this.attr('aria-expanded') === "true") {
+					$this.closest(".panel-heading").addClass('active');
+				} else {
+					$this.closest(".panel-heading").removeClass('active');
+				}
+			}, 100);
+	});
+
+
+	// myoverview & path overview show and hide
+	$.fn.HasScrollBar = function () {
+		//note: clientHeight= height of holder
+		//scrollHeight= we have content till this height
+		var _elm = $(this)[0];
+		var _hasScrollBar = false;
+
+		if (_elm != undefined && ((_elm.clientHeight < _elm.scrollHeight) || (_elm.clientWidth < _elm.scrollWidth))) {
+			_hasScrollBar = true;
+		}
+		return _hasScrollBar;
+	}
+
+	$(".show-more").on("click", function () {
+		var $this = $(this);
+		var $content = $this.prev("div.content");
+		var linkText = $this.text().toUpperCase();
+
+
+		if (linkText === "SHOW MORE") {
+			linkText = "Show less";
+			$content.addClass('showContent').removeClass('hideContent')
+		} else {
+			linkText = "Show more";
+			$content.addClass('hideContent').removeClass('showContent')
+		};
+
+		$this.text(linkText);
+	});
+	$("div.content").HasScrollBar() == true ? $(".show-more").show() : $(".show-more").hide();
+
+	//Path overview Description section data
+	$('#main_tab').on('click', function () {
+		$('#pathoverview_sectioncontent').empty().append(`<span class="loader-path"></span>`);
+		var $pathid = $(this).attr('pathid');
+		$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+			action: 'getlpdescription', pathid: $pathid
+		}).done(function (data, textStatus, jqXHR) {
+			var description = `<span class="loader-path d-none"></span>
+								<div class="dashboard-details mt-5">
+									<div class="details-card p-3">
+										<div class="theme-title-1 mt-3">
+											<p class="mb-3">${data.description}</p>
+										</div>
+									</div>
+								</div>`;
+
+			$('#pathoverview_sectioncontent').empty().append(description);
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			$('#pathoverview_sectioncontent').empty().append(`<h3 class="text-center">Something wrong!</h3>`);
+		})
+	})
+
+	//Path overview lessons section data
+	$('#lessons_tab_old').on('click', function () {
+		$('#pathoverview_sectioncontent').empty().append(`<span class="loader-path"></span>`);
+		var $pathid = $(this).attr('pathid');
+		$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+			action: 'getlplessions', pathid: $pathid
+		}).done(function (data, textStatus, jqXHR) {
+			var lessons_content = '';
+			// continue learning
+			lessons_content += `<span class="loader-path d-none"></span>
+								<div class="dashboard-details mt-5">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="details-card p-3 h-100">
+												<div class="theme-title-1 mt-3">
+													<span class="float-right currsor-point" data-toggle="modal" data-target="#setpace"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>
+													<h4>Set a pace</h4>
+													<p class="mb-3">Learners who set a goal are 75% more likely to complete the course. We’ll help you track your progress.</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="details-card p-3 h-100">
+												<div class="theme-title-1 mt-3">
+													<span class="float-right currsor-point"><a href="${data.continue_learning.continue_learning_url}"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></span>
+													<h4>Continue Learning:</h4>
+													<p class="mb-3">${data.continue_learning.continue_learning_name}</p>
+													<div class="w-50">
+														<span class="progress custom-color-progress purchased">
+															<div class="progress-bar active-progress" role="progressbar" style="width: ${data.continue_learning.continue_learning_percentage}%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"><span class="custom-place righ-chnage blut_texr" style="right: 43% !IMPORTANT;">${data.continue_learning.continue_learning_percentage}%</span></div>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="dashboard-details  path_overview_collapse mt-5 mb-4">
+								<div class="details-card pos-rel">
+								<div class="course-category ml-5">
+                                    <h5 class="pl-5 pt-2 mb-0">PATH</h5>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+	                                <div class="purchase-coures-name theme-title-1 ml-5">
+										<h4 class="pl-5 pt-0 mb-0">Application Developer</h4>
+										<p class="pl-5 pt-0">485 Learning Points | 3 Course</p>
+									</div>
+									<div class="expand-collaspe-button theme-title-1">
+										<p class="mr-3 underline currsor-point change-txt">Expand All</p>
+									</div>
+								</div>
+								<hr class="m-0">`;
+			$.each(data.lp_lessions, function (key, value) {
+				lessons_content += `<div class="circle-progress path_circle_pos" >
+										<!-- Progress bar -->
+								        <div class="progress mx-auto" data-value='${value.course_progress}' style="width:50px; height: 50px;">
+								          <span class="progress-left">
+								                <span class="progress-bar border-danger"></span>
+								          </span>
+								          <span class="progress-right">
+								                <span class="progress-bar border-danger"></span>
+								          </span>
+								          <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+								            <div class="h2 font-weight-bold m-0" style="font-size:14px">${value.course_progress}%</div>
+								          </div>
+								        </div>
+								        <!-- END -->
+					            	</div>
+									<div class="panel-group mb-0 grdient-color-change" id="accordion-${value.courseid}" role="tablist" aria-multiselectable="true">
+									  <div class="panel panel-default">
+									    <div class="panel-heading size-reduce pt-1 pl-4" role="tab" id="headingOne">
+									      <h4 class="panel-title mb-2">
+									        <a role="button" class="course-category" data-toggle="collapse" data-parent="#accordion-${value.courseid}" href="#collapseOne-${value.courseid}" aria-expanded="true" aria-controls="collapseOne-${value.courseid}">
+									         <div class="purchase-line collaspe_title_block">
+									         	<div class="row">
+													<div class="col-md-7 purchase-coures-name course-category theme-title-1">
+														<h5 class="mb-0 blut_course">COURSE</h5>
+														<h4 class="collapse-custom currsor-point">${value.coursename}</h4>
+													</div>
+													<div class="col-md-5 mt-3">
+														<span class="progress custom-color-progress w-75">
+															<div class="progress-bar active-progress" role="progressbar" style="width: ${value.course_progress}%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"><span class="custom-place righ-chnage blut_texr" style="left: 50% !IMPORTANT;">${value.course_progress}%</span></div>
+														</span>
+													</div>
+												</div>
+											</div>
+									        </a>
+									      </h4>
+									    </div>
+									    <div id="collapseOne-${value.courseid}" class="panel-collapse mb-3 collapse in pt-3 pl-5 pb-2 pr-3 collaspse-des-block" role="tabpanel" aria-labelledby="headingOne" style="margin-left:45px">`;
+				$.each(value.sections, function (key1, value1) {
+					lessons_content += `<div class="panel-body">
+									      	<div class="panel-heading size-reduce active" role="tab" id="headingOne">
+									      		<div class="purchase-coures-name theme-title-1">
+													<p class="currsor-point ">${value1.sectionname}</p>
+												</div>
+												<div class="list-of-path">`;
+					var fillurllp = value1.sectionid;
+					$.each(value1.activities, function (key2, value2) {
+						lessons_content += `<div class="d-flex justify-content-between align-items-baseline mb-0">
+														<div class="path_name_list">
+															<span class="mr-2">
+																<svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<g filter="url(#filter0_d_0_1)">
+																	<circle cx="26" cy="24" r="14" fill="url(#paint0_linear_0_1_`+ fillurllp + `)"/>
+																	</g>
+																	<path d="M30.9966 17.2522C30.767 17.1245 30.5145 17.0432 30.2535 17.0132C29.9925 16.9831 29.7281 17.0047 29.4755 17.0769C29.2229 17.1491 28.987 17.2703 28.7812 17.4337C28.5755 17.5971 28.404 17.7995 28.2766 18.0292L24.5636 24.7112L22.4386 22.5862C22.2541 22.3952 22.0334 22.2428 21.7894 22.138C21.5454 22.0332 21.2829 21.978 21.0174 21.9757C20.7518 21.9734 20.4885 22.024 20.2427 22.1246C19.9969 22.2251 19.7736 22.3736 19.5858 22.5614C19.398 22.7492 19.2495 22.9725 19.1489 23.2183C19.0484 23.4641 18.9978 23.7275 19.0001 23.993C19.0024 24.2586 19.0576 24.521 19.1624 24.765C19.2672 25.009 19.4196 25.2297 19.6106 25.4142L23.6106 29.4142C23.9886 29.7932 24.4986 30.0012 25.0246 30.0012L25.3016 29.9812C25.6081 29.9383 25.9005 29.8249 26.1558 29.6498C26.4111 29.4747 26.6222 29.2428 26.7726 28.9722L31.7726 19.9722C31.9002 19.7427 31.9814 19.4902 32.0115 19.2293C32.0416 18.9684 32.02 18.7041 31.9479 18.4515C31.8759 18.1989 31.7548 17.963 31.5915 17.7572C31.4283 17.5515 31.2261 17.3799 30.9966 17.2522V17.2522Z" fill="white"/>
+																	<defs>
+																	<filter id="filter0_d_0_1" x="0" y="0" width="52" height="52" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+																	<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+																	<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+																	<feOffset dy="2"/>
+																	<feGaussianBlur stdDeviation="6"/>
+																	<feComposite in2="hardAlpha" operator="out"/>
+																	<feColorMatrix type="matrix" values="0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0.24 0"/>
+																	<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+																	<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+																	</filter>
+																	<linearGradient id="paint0_linear_0_1_`+ fillurllp + `" x1="40" y1="38" x2="-14.7841" y2="10.5168" gradientUnits="userSpaceOnUse">
+																	<stop stop-color="#18AEDF"/>
+																	<stop offset="0.639133" stop-color="#915DE2"/>
+																	</linearGradient>
+																	</defs>
+																	</svg>
+
+															</span>
+															<a href="${value2.activityurl}" class="quiz-date">${value2.activityname}</a>
+														</div>
+														<div class="points theme-title-1">
+															<p>
+																${(value2.duration) ? value2.duration + ' Mins' : ''}
+																${(value2.duration && value2.xpawarded) ? ' | ' : ''}
+																${(value2.xpawarded) ? value2.xpearned + ' / ' + value2.xpawarded + ' PTS' : ''}
+															</p>
+														</div>
+													</div>
+													<hr class="m-0">`;
+					});
+					lessons_content += `</div></div></div>`;
+				})
+				lessons_content += `</div></div></div>`;
+			})
+			lessons_content += `</div></div>
+			<div class="modal fade" id="setpace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog dashboard-details" role="document">
+					<div class="modal-content">
+					<div class="modal-header pb-0">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body pt-0">
+						<div class="theme-title-1">
+							<h5 class="mb-3 bold">Set a Pace</h5>
+							<p class="mb-4">Learners who set a pace are 75% more likely to complete the course. We’ll help you track your progress.</p>
+						</div>
+						<div class="time-select-card">
+							<div class="details-card mb-3 currsor-point">
+								<div class="theme-title-1 px-3 py-4">
+									<h5 class="mb-0 bold">Relaxed: 3 Hours in a week</h5>
+								</div>
+							</div>
+							<div class="details-card mb-3 currsor-point">
+								<div class="theme-title-1 px-3 py-4 d-flex justify-content-between">
+									<h5 class="mb-0 bold">Medium: 6 Hourse in a week</h5>
+									<p class="mb-0">Recommended</p>
+								</div>
+							</div>
+							<div class="details-card mb-3 currsor-point">
+								<div class="theme-title-1 px-3 py-4">
+									<h5 class="mb-0 bold">Fast Track: 10 Hours  a week</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>`;
+			$('#pathoverview_sectioncontent').empty().append(lessons_content);
+
+			$('.expand-collaspe-button ').click(function () {
+				$('.panel-collapse').toggleClass('show')
+				var text = $('.change-txt').text() == 'Expand All' ? 'Collapse All' : 'Expand All';
+				$('.change-txt').text(text);
+			});
+
+
+
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			$('#pathoverview_sectioncontent').empty().append(`<h3 class="text-center">Something wrong!</h3>`);
+		})
+	})
+
+	//Path overview Discussions section data
+	function path_discussions($key_search = '') {
+		$('#pathoverview_sectioncontent').empty().append(`<span class="loader-path"></span>`);
+		var $pathid = $('#discussions_tab').attr('pathid');
+		$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+			action: 'getlpdiscussions', pathid: $pathid, search: $key_search
+		}).done(function (data, textStatus, jqXHR) {
+
+			var discussions = `<span class="loader-path d-none"></span>
+					<div class="dashboard-title mt-5">
+					<div class="mt-5">
+						<div class="theme-title-1">
+							<h6>Course Discussions</h6>
+							<p>Active threads in every course in this program</p>
+						</div>
+						<div class="search-discussion w-25">
+                            <div class="input-group mb-3">
+                              <input type="text" id="search-discussion-text" class="form-control" placeholder="Search discussion" aria-label="discussion" aria-describedby="basic-addon2">
+                              <div class="input-group-append ml-2">
+                                <button id="search-discussion-button" class="btn btn-outline-secondary currsor-point" type="button">Search</button>
+                              </div>
+ <div class="input-group-append ml-2">
+                                <button id="Reset-discussion-button" class="btn btn-outline-secondary currsor-point" type="button">Reset</button>
+                              </div>
+                            </div>
+                        </div>
+						<div class="dashboard-details mt-4">
+							<div class="details-card p-3 mb-2">
+								<div class="panel-heading size-reduce active" role="tab" id="headingOne">
+									<div class="list-of-path">`;
+			if (data.discussions.length === 0) {
+				discussions += `
+										<div class="d-flex justify-content-between align-items-baseline mb-0">
+											<div class="path_name_list">
+												<span class="quiz-date remove-opa">No Data Available</span>
+											</div>
+										</div>`;
+			}
+			else {
+				$.each(data.discussions, function (key, value) {
+					discussions += `
+												<div class="d-flex justify-content-between align-items-baseline mb-0 mt-1">
+													<div class="path_name_list">
+														<span class="quiz-date remove-opa currsor-point ">${value.coursename}</span>
+													</div>
+													<div class="points theme-title-1">
+														<p>${value.total_threads} Open Threads  |  ${value.total_answers} Solved Queries</p>
+													</div>
+												</div>
+												<hr class="m-0">`;
+				});
+			}
+			discussions += `
+									</div>
+						        </div>
+							</div>
+						</div>
+					</div>
+				</div>`;
+
+			$('#pathoverview_sectioncontent').empty().append(discussions);
+			if ($key_search != '') {
+				$('#search-discussion-text').val($key_search);
+			}
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			$('#pathoverview_sectioncontent').empty().append(`<h3 class="text-center">Something wrong!</h3>`);
+		})
+	}
+
+	$('#discussions_tab').on('click', function () {
+		path_discussions();
+	})
+
+	$('#pathoverview_sectioncontent').on('click', '#search-discussion-button', function () {
+		var search_text = $('#search-discussion-text').val();
+
+		if (search_text != '') {
+			path_discussions(search_text);
+		}
+	});
+
+	$('#pathoverview_sectioncontent').on('click', '#Reset-discussion-button', function () {
+
+		path_discussions();
+
+	});
+
+
+	//Path overview Notes section data
+	$('#notes_tab').on('click', function () {
+		$('#pathoverview_sectioncontent').empty().append(`<span class="loader-path"></span>`);
+		var $pathid = $(this).attr('pathid');
+		$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+			action: 'getlpusernotes', pathid: $pathid
+		}).done(function (data, textStatus, jqXHR) {
+			var user_notes = `<span class="loader-path d-none"></span>
+				<div class="dashboard-title mt-5">
+					<div class="dashboard-details mt-4">
+						<div class="mt-5">
+							<div class="theme-title-1">
+								<h6>Course Notes</h6>
+								<p>Your notes in this program for each course</p>
+							</div>
+
+							<div class="dashboard-details mt-4">
+								<div class="details-card p-3 mb-2">
+									<div class="panel-heading size-reduce active" role="tab" id="headingOne">
+										<div class="list-of-path">`;
+			if (data.lpnotes.length === 0) {
+				user_notes += `
+												<div class="d-flex justify-content-between align-items-baseline mb-0">
+													<div class="path_name_list">
+														<span class="quiz-date remove-opa">This path doesn\'t have any notes</span>
+													</div>
+												</div>`;
+			} else {
+				$.each(data.lpnotes, function (key, value) {
+					user_notes += `
+												<div class="d-flex justify-content-between align-items-baseline mb-0 mt-1">
+													<div class="path_name_list">
+														<span class="quiz-date remove-opa">${value.coursename}</span>
+													</div>
+													<div class="points theme-title-1">
+														<p>
+														${(value.readingnotes) ? value.readingnotes + ' Reading Notes | ' : ''}
+														${(value.vplnotes) ? value.vplnotes + ' Hands-on Notes | ' : ''}
+														${(value.videonotes) ? value.videonotes + ' Video Notes' : ''}
+														</p>
+													</div>
+												</div>
+												<hr class="m-0">`
+				})
+			}
+			user_notes += `</div>
+							        </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>`;
+
+			$('#pathoverview_sectioncontent').empty().append(user_notes);
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			$('#pathoverview_sectioncontent').empty().append(`<h3 class="text-center">Something wrong!</h3>`);
+		})
+	})
+
+
+	//Course overview Description section data
+	$('#course_description_old').on('click', function () {
+		$('#courseoverview_sectioncontent').empty().append(`<span class="loader-path"></span>`);
+		var $courseid = $(this).attr('courseid');
+		$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+			action: 'getcoursedescription', courseid: $courseid
+		}).done(function (data, textStatus, jqXHR) {
+			var description = `<span class="loader-path d-none"></span>
+								<div class="dashboard-details mt-5">
+									<div class="details-card p-3">
+										<div class="theme-title-1 mt-3">
+											<p class="mb-3">${data.description}</p>
+										</div>
+									</div>
+								</div>`;
+
+			$('#courseoverview_sectioncontent').empty().append(description);
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			$('#courseoverview_sectioncontent').empty().append(`<h3 class="text-center">Something wrong!</h3>`);
+		})
+	})
+
+	//Course overview lessons section data
+	$('#course_lessons_old').on('click', function () {
+		$('#courseoverview_sectioncontent').empty().append(`<span class="loader-path"></span>`);
+		var $courseid = $(this).attr('courseid');
+		$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+			action: 'getcourselessions', courseid: $courseid
+		}).done(function (data, textStatus, jqXHR) {
+			var lessons_content = '';
+			// continue learning;
+			lessons_content += `<span class="loader-path d-none"></span>
+								<div class="dashboard-details mt-5">
+									<div class="details-card p-3">
+										<div class="theme-title-1 mt-3">
+											<span class="float-right currsor-point"><a href="${data.continue_learning.continue_learning_url}"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></span>
+											<h4>Continue Learning:</h4>
+											<p class="mb-3">${data.continue_learning.continue_learning_name}</p>
+											<div class="w-50">
+												<span class="progress custom-color-progress purchased">
+													<div class="progress-bar active-progress" role="progressbar" style="width: ${data.continue_learning.continue_learning_percentage}%;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"><span class="custom-place righ-chnage blut_texr" style="left: -60px !IMPORTANT;">${data.continue_learning.continue_learning_percentage}%</span></div>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="dashboard-details  path_overview_collapse mt-5 mb-4">
+								<div class="details-card pos-rel">`;
+			$.each(data.course_lessions.sections, function (key, value) {
+				lessons_content += `<div class="panel-group mb-0" id="accordion" role="tablist" aria-multiselectable="true">
+										  <div class="panel panel-default">`;
+				if (value.activities.length === 0) {
+					lessons_content += `<div class="panel-heading size-reduce active pt-3 pl-1" role="tab" id="headingOne">
+													<h4 class="panel-title mb-2">
+													<div class="col-md-7 purchase-coures-name theme-title-1">
+														<h4 class="collapse-custom ml-4">${value.sectionname}</h4>
+													</div>
+													<hr>
+													</h4>
+												</div>`;
+				} else {
+					lessons_content += `<div class="panel-heading size-reduce active pt-3 pl-1" role="tab" id="headingOne">
+													<h4 class="panel-title mb-2">
+														<a role="button" class="course-category" data-toggle="collapse" data-parent="#accordion" href="#collapseOne-${value.sectionid}" aria-expanded="true" aria-controls="collapseOne-${value.sectionid}">
+														<div class="purchase-line collaspe_title_block">
+															<div class="row">
+																<div class="col-md-7 purchase-coures-name theme-title-1">
+																	<h4 class="collapse-custom">${value.sectionname}</h4>
+																</div>
+															</div>
+														</div>
+														</a>
+														<hr>
+													</h4>
+												</div>
+												<div id="collapseOne-${value.sectionid}" class="panel-collapse collapse show in pt-3 pl-5 pb-2 pr-3 collaspse-des-block" role="tabpanel" aria-labelledby="headingOne">
+												<div class="panel-body">
+													<div class="panel-heading size-reduce active" role="tab" id="headingOne">
+														<div class="list-of-path">`;
+					var fillurl = value.sectionid;
+					$.each(value.activities, function (key1, value1) {
+						lessons_content += `
+															<div class="d-flex justify-content-between align-items-baseline mb-0">
+																<div class="path_name_list">
+																	<span class="mr-2">
+																		<svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+																			<g filter="url(#filter0_d_0_1)">
+																			<circle cx="26" cy="24" r="14" fill="url(#paint0_linear_0_1_`+ fillurl + `)"/>
+																			</g>
+																			<path d="M30.9966 17.2522C30.767 17.1245 30.5145 17.0432 30.2535 17.0132C29.9925 16.9831 29.7281 17.0047 29.4755 17.0769C29.2229 17.1491 28.987 17.2703 28.7812 17.4337C28.5755 17.5971 28.404 17.7995 28.2766 18.0292L24.5636 24.7112L22.4386 22.5862C22.2541 22.3952 22.0334 22.2428 21.7894 22.138C21.5454 22.0332 21.2829 21.978 21.0174 21.9757C20.7518 21.9734 20.4885 22.024 20.2427 22.1246C19.9969 22.2251 19.7736 22.3736 19.5858 22.5614C19.398 22.7492 19.2495 22.9725 19.1489 23.2183C19.0484 23.4641 18.9978 23.7275 19.0001 23.993C19.0024 24.2586 19.0576 24.521 19.1624 24.765C19.2672 25.009 19.4196 25.2297 19.6106 25.4142L23.6106 29.4142C23.9886 29.7932 24.4986 30.0012 25.0246 30.0012L25.3016 29.9812C25.6081 29.9383 25.9005 29.8249 26.1558 29.6498C26.4111 29.4747 26.6222 29.2428 26.7726 28.9722L31.7726 19.9722C31.9002 19.7427 31.9814 19.4902 32.0115 19.2293C32.0416 18.9684 32.02 18.7041 31.9479 18.4515C31.8759 18.1989 31.7548 17.963 31.5915 17.7572C31.4283 17.5515 31.2261 17.3799 30.9966 17.2522V17.2522Z" fill="white"/>
+																			<defs>
+																			<filter id="filter0_d_0_1" x="0" y="0" width="52" height="52" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+																			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+																			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+																			<feOffset dy="2"/>
+																			<feGaussianBlur stdDeviation="6"/>
+																			<feComposite in2="hardAlpha" operator="out"/>
+																			<feColorMatrix type="matrix" values="0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0.24 0"/>
+																			<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+																			<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+																			</filter>
+																			<linearGradient id="paint0_linear_0_1_`+ fillurl + `" x1="40" y1="38" x2="-14.7841" y2="10.5168" gradientUnits="userSpaceOnUse">
+																			<stop stop-color="#18AEDF"/>
+																			<stop offset="0.639133" stop-color="#915DE2"/>
+																			</linearGradient>
+																			</defs>
+																			</svg>
+
+																	</span>
+																	<a href="${value1.activityurl}" class="quiz-date">${value1.activityname}</a>
+																</div>
+																<div class="points theme-title-1">
+																	<p>
+																		${(value1.duration) ? value1.duration + ' Mins' : ''}
+																		${(value1.duration && value1.xpawarded) ? ' | ' : ''}
+																		${(value1.xpawarded) ? value1.xpearned + ' / ' + value1.xpawarded + ' PTS' : ''}
+																	</p>
+																</div>
+															</div>
+															<hr class="m-0">`;
+					});
+					lessons_content += `</div></div></div></div>`;
+				}
+				lessons_content += `</div></div>`;
+			})
+			lessons_content += `</div></div>`;
+			$('#courseoverview_sectioncontent').empty().append(lessons_content);
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			$('#courseoverview_sectioncontent').empty().append(`<h3 class="text-center">Something wrong!</h3>`);
+		})
+	})
+
+	//Course overview Discussions section data
+	$('#course_discussions').on('click', function () {
+		$('#courseoverview_sectioncontent').empty().append(`<span class="loader-path"></span>`);
+		var $courseid = $(this).attr('courseid');
+		$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+			action: 'getcoursediscussions', courseid: $courseid
+		}).done(function (data, textStatus, jqXHR) {
+			var discussions = `<span class="loader-path d-none"></span>
+							<div class="dashboard-title mt-5">
+								<div class="d-flex justify-content-between">
+									<div class="theme-title-1">
+										<h6>My Discussions</h6>
+										<p>Discussion threads that you have participated in</p>
+									</div>
+									<div class="post-button">
+										<button class="btn btn-primary">Post a Question</button>
+									</div>
+								</div>
+								<div class="dashboard-details mt-4">`;
+
+			if (data.mydiscussions.length === 0) {
+				discussions += `<div class="details-card p-3 mb-2">
+														<div class="row">
+															<div class="col-md-9">
+																<div class="theme-title-1">
+																	<h6>You don\'t have any active discussion for this course</h6>
+																</div>
+															</div>
+														</div>
+													</div>`;
+			} else {
+				$.each(data.mydiscussions, function (key, value) {
+					discussions += `<div class="details-card p-3 mb-2">
+										<div class="row">
+											<div class="col-md-9">
+												<div class="theme-title-1">
+													<h6>${value.discussion_name}</h6>
+													<p class="mb-1 hide-section">${value.discussion_question}</p>
+												</div>
+											</div>
+											<div class="col-md-3">
+												<div class="side-course-details">
+													<div class="d-flex justify-content-initial">
+														<div class="like-coure currsor-point">
+															<svg width="45" height="44" viewBox="5 0 28 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<g filter="url(#filter0_d_1824_305)">
+																<circle cx="22.9609" cy="20" r="10" fill="url(#paint0_linear_1824_305)"/>
+																</g>
+																<path class="icon-color-chage" d="M22.0949 15.5C22.4798 14.8333 23.4421 14.8333 23.827 15.5L27.2911 21.5C27.676 22.1667 27.1948 23 26.425 23H19.4968C18.727 23 18.2459 22.1667 18.6308 21.5L22.0949 15.5Z" fill="#E6E2E2"/>
+																<defs>
+																<filter id="filter0_d_1824_305" x="0.960938" y="0" width="44" height="44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+																<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+																<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+																<feOffset dy="2"/>
+																<feGaussianBlur stdDeviation="6"/>
+																<feComposite in2="hardAlpha" operator="out"/>
+																<feColorMatrix type="matrix" values="0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0.24 0"/>
+																<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1824_305"/>
+																<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1824_305" result="shape"/>
+																</filter>
+																<linearGradient id="paint0_linear_1824_305" x1="32.9609" y1="30" x2="-6.17057" y2="10.3692" gradientUnits="userSpaceOnUse">
+																<stop stop-color="#18AEDF"/>
+																<stop offset="0.639133" stop-color="#915DE2"/>
+																</linearGradient>
+																</defs>
+															</svg>
+															<span class="">${value.discussion_upvote}</span>
+														</div>
+														<div class="dislike-coure ml-3 currsor-point" style="margin-top: 8px;">
+															<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<circle cx="10.9609" cy="10" r="10" transform="rotate(-180 10.9609 10)" fill="url(#paint0_linear_1824_310)"/>
+																<path class="icon-color-chage" d="M11.827 14.5C11.4421 15.1667 10.4798 15.1667 10.0949 14.5L6.63081 8.5C6.24591 7.83333 6.72704 7 7.49684 7L14.425 7C15.1948 7 15.676 7.83333 15.2911 8.5L11.827 14.5Z" fill="#E6E2E2"/>
+																<defs>
+																<linearGradient id="paint0_linear_1824_310" x1="-29.9011" y1="33.8333" x2="25.3294" y2="24.9149" gradientUnits="userSpaceOnUse">
+																<stop stop-color="white"/>
+																<stop offset="0.0001" stop-color="#874EFF"/>
+																<stop offset="1" stop-color="#F05965"/>
+																</linearGradient>
+																</defs>
+															</svg>
+															<span class="">${value.discussion_downvote}</span>
+														</div>
+													</div>
+													<div class="course-view mb-2 ml-3 currsor-point">
+														<svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<g opacity="0.8" clip-path="url(#clip0_1824_301)">
+															<path class="icon-color-chage" d="M11.0887 1.3125C5.28905 1.3125 0.58866 5.13105 0.58866 9.84375C0.58866 11.7961 1.40487 13.5844 2.75839 15.024C2.14725 16.64 0.875769 18.01 0.855261 18.0264C0.584558 18.3135 0.51073 18.7318 0.666589 19.0928C0.822449 19.4537 1.17928 19.6875 1.57303 19.6875C4.0955 19.6875 6.08475 18.6334 7.27831 17.7885C8.46366 18.1617 9.74335 18.375 11.0887 18.375C16.8883 18.375 21.5887 14.5564 21.5887 9.84375C21.5887 5.13105 16.8883 1.3125 11.0887 1.3125ZM11.0887 16.4062C9.99354 16.4062 8.91073 16.2381 7.87303 15.91L6.94198 15.6146L6.14217 16.1807C5.55565 16.5949 4.75175 17.0584 3.78378 17.3701C4.08319 16.8738 4.3744 16.316 4.59999 15.7213L5.03475 14.5688L4.18983 13.6746C3.44745 12.883 2.55741 11.5746 2.55741 9.84375C2.55741 6.22617 6.38417 3.28125 11.0887 3.28125C15.7932 3.28125 19.6199 6.22617 19.6199 9.84375C19.6199 13.4613 15.7932 16.4062 11.0887 16.4062Z" fill="white"/>
+															</g>
+															<defs>
+															<clipPath id="clip0_1824_301">
+															<rect width="21" height="21" fill="white" transform="translate(0.585938)"/>
+															</clipPath>
+															</defs>
+														</svg>
+														<span>${value.discussion_answers} Answers</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>`;
+				});
+				discussions += `<div class="float-right underline mr-2 currsor-point">View More</div>`;
+			}
+
+			discussions += `</div>
+									<div class="mt-5">
+									<div class="theme-title-1">
+										<h6>Course Discussions</h6>
+										<p>Active threads in every course in this program</p>
+									</div>
+
+									<div class="dashboard-details mt-4">`
+			if (data.course_discussions.length === 0) {
+				discussions += `<div class="details-card p-3 mb-2">
+														<div class="row">
+															<div class="col-md-9">
+																<div class="theme-title-1">
+																	<h6>This course doesn\'t have any active discussion</h6>
+																</div>
+															</div>
+														</div>
+													</div>`;
+			} else {
+				$.each(data.course_discussions, function (key, value) {
+					discussions += `<div class="details-card p-3 mb-2">
+											<div class="row">
+												<div class="col-md-9">
+													<div class="theme-title-1">
+														<h6>${value.discussion_name}</h6>
+														<p class="mb-1 hide-section">${value.discussion_question}</p>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="side-course-details">
+														<div class="d-flex justify-content-initial">
+															<div class="like-coure currsor-point">
+																<svg width="45" height="44" viewBox="5 0 28 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<g filter="url(#filter0_d_1824_305)">
+																	<circle cx="22.9609" cy="20" r="10" fill="url(#paint0_linear_1824_305)"/>
+																	</g>
+																	<path class="icon-color-chage" d="M22.0949 15.5C22.4798 14.8333 23.4421 14.8333 23.827 15.5L27.2911 21.5C27.676 22.1667 27.1948 23 26.425 23H19.4968C18.727 23 18.2459 22.1667 18.6308 21.5L22.0949 15.5Z" fill="#E6E2E2"/>
+																	<defs>
+																	<filter id="filter0_d_1824_305" x="0.960938" y="0" width="44" height="44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+																	<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+																	<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+																	<feOffset dy="2"/>
+																	<feGaussianBlur stdDeviation="6"/>
+																	<feComposite in2="hardAlpha" operator="out"/>
+																	<feColorMatrix type="matrix" values="0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0.24 0"/>
+																	<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1824_305"/>
+																	<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1824_305" result="shape"/>
+																	</filter>
+																	<linearGradient id="paint0_linear_1824_305" x1="32.9609" y1="30" x2="-6.17057" y2="10.3692" gradientUnits="userSpaceOnUse">
+																	<stop stop-color="#18AEDF"/>
+																	<stop offset="0.639133" stop-color="#915DE2"/>
+																	</linearGradient>
+																	</defs>
+																</svg>
+																<span class="">${value.discussion_upvote}</span>
+															</div>
+															<div class="dislike-coure ml-3 currsor-point" style="margin-top: 8px;">
+																<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<circle cx="10.9609" cy="10" r="10" transform="rotate(-180 10.9609 10)" fill="url(#paint0_linear_1824_310)"/>
+																	<path class="icon-color-chage" d="M11.827 14.5C11.4421 15.1667 10.4798 15.1667 10.0949 14.5L6.63081 8.5C6.24591 7.83333 6.72704 7 7.49684 7L14.425 7C15.1948 7 15.676 7.83333 15.2911 8.5L11.827 14.5Z" fill="#E6E2E2"/>
+																	<defs>
+																	<linearGradient id="paint0_linear_1824_310" x1="-29.9011" y1="33.8333" x2="25.3294" y2="24.9149" gradientUnits="userSpaceOnUse">
+																	<stop stop-color="white"/>
+																	<stop offset="0.0001" stop-color="#874EFF"/>
+																	<stop offset="1" stop-color="#F05965"/>
+																	</linearGradient>
+																	</defs>
+																</svg>
+																<span class="">${value.discussion_downvote}</span>
+															</div>
+														</div>
+														<div class="course-view mb-2 ml-3 currsor-point">
+															<svg width="22" height="21" viewBox="0 0 22 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+																<g opacity="0.8" clip-path="url(#clip0_1824_301)">
+																<path class="icon-color-chage" d="M11.0887 1.3125C5.28905 1.3125 0.58866 5.13105 0.58866 9.84375C0.58866 11.7961 1.40487 13.5844 2.75839 15.024C2.14725 16.64 0.875769 18.01 0.855261 18.0264C0.584558 18.3135 0.51073 18.7318 0.666589 19.0928C0.822449 19.4537 1.17928 19.6875 1.57303 19.6875C4.0955 19.6875 6.08475 18.6334 7.27831 17.7885C8.46366 18.1617 9.74335 18.375 11.0887 18.375C16.8883 18.375 21.5887 14.5564 21.5887 9.84375C21.5887 5.13105 16.8883 1.3125 11.0887 1.3125ZM11.0887 16.4062C9.99354 16.4062 8.91073 16.2381 7.87303 15.91L6.94198 15.6146L6.14217 16.1807C5.55565 16.5949 4.75175 17.0584 3.78378 17.3701C4.08319 16.8738 4.3744 16.316 4.59999 15.7213L5.03475 14.5688L4.18983 13.6746C3.44745 12.883 2.55741 11.5746 2.55741 9.84375C2.55741 6.22617 6.38417 3.28125 11.0887 3.28125C15.7932 3.28125 19.6199 6.22617 19.6199 9.84375C19.6199 13.4613 15.7932 16.4062 11.0887 16.4062Z" fill="white"/>
+																</g>
+																<defs>
+																<clipPath id="clip0_1824_301">
+																<rect width="21" height="21" fill="white" transform="translate(0.585938)"/>
+																</clipPath>
+																</defs>
+															</svg>
+															<span>${value.discussion_answers} Answers</span>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>`;
+				});
+			}
+			discussions += `</div></div></div>`;
+
+			$('#courseoverview_sectioncontent').empty().append(discussions);
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			$('#courseoverview_sectioncontent').empty().append(`<h3 class="text-center">Something wrong!</h3>`);
+		})
+	})
+
+
+	//Course overview Notes section data
+	$('#course_notes').on('click', function () {
+		$('#courseoverview_sectioncontent').empty().append(`<span class="loader-path"></span>`);
+		var $courseid = $(this).attr('courseid');
+		$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+			action: 'getcourseusernotes', courseid: $courseid
+		}).done(function (data, textStatus, jqXHR) {
+			var user_notes = `<span class="loader-path d-none"></span>
+							<div class="dashboard-title mt-5">
+								<div class="dashboard-details mt-4">
+									<div class="mt-5">
+										<div class="dashboard-details mt-4">
+											<div class="notes-append">`;
+			if (data.empty_coursenotes != '') {
+				user_notes += `<div class="details-card p-3 mb-2">
+																	<div class="row">
+																		<div class="col-md-9">
+																			<div class="theme-title-1">
+																				<h6>${data.empty_coursenotes}</h6>
+																			</div>
+																		</div>
+																	</div>
+																</div>`;
+			} else {
+				user_notes += `<div class="theme-title-1 mb-2 mt-4">
+													<h6>Video Notes</h6>
+												</div>
+												<div class="details-card p-3 mb-2">
+													<div class="panel-heading size-reduce active" role="tab" id="headingOne">
+														<div class="list-of-path">`
+				$.each(data.video_notes, function (key, value) {
+					user_notes += `
+															<div class="theme-title-1 mt-2">
+																<h6>${value.activityname}</h6>
+																<p class="mb-3">${value.note_content}</p>
+															</div>
+															<hr class="m-0">`;
+				})
+				user_notes += `</div></div></div>
+
+												<div class="theme-title-1 mb-2 mt-4">
+													<h6>Reading Notes</h6>
+												</div>`;
+				$.each(data.reading_notes, function (key, value) {
+					user_notes += `
+															<div class="theme-title-1 mt-2">
+																<h6>${value.activityname}</h6>
+																<p class="mb-3">${value.note_content}</p>
+															</div>
+															<hr class="m-0">`;
+				})
+				user_notes += `</div></div></div>
+
+												<div class="theme-title-1 mb-2 mt-4">
+													<h6>Hands-on Notes</h6>
+												</div>`;
+				$.each(data.vpl_notes, function (key, value) {
+					user_notes += `
+															<div class="theme-title-1 mt-2">
+																<h6>${value.activityname}</h6>
+																<p class="mb-3">${value.note_content}</p>
+															</div>
+															<hr class="m-0">`;
+				})
+				user_notes += `</div></div></div>`;
+			}
+			user_notes += `</div></div></div></div></div>`;
+
+			$('#courseoverview_sectioncontent').empty().append(user_notes);
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			$('#courseoverview_sectioncontent').empty().append(`<h3 class="text-center">Something wrong!</h3>`);
+		})
+	})
+
+	if ($('body').find('.detaild-discussion').length !== 0) {
+
+		$(".dis-comment-section").hide();
+
+		$(".open-comment-section").click(function () {
+			$(this).closest('.find-comment-section').children('.dis-comment-section').toggle();
+		});
+
+		$('.right-action-dots').click(function () {
+			$(this).closest('.dots-action').children('.right-action-detail').toggleClass('d-none');
+		});
+
+		$('.open-comment-section').click(function () {
+			var postid = $(this).attr('postid');
+
+			if ($('#post-comment-section-' + postid).text().trim().length == 0) {
+
+				$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+					action: 'getdiscussioncomment', postid: postid
+				}).done(function (data, textStatus, jqXHR) {
+					var reply_content = `<div class="row">`
+
+					$.each(data, function (key, value) {
+						reply_content += `<div class="commented-detais col-12 mt-2">
+												<div class="user-detail d-flex justify-content-initial align-items-flex-start">
+													<div class="profile-image mr-3">
+														${value.replied_user_profile}
+													</div>
+													<div class="profile-name">
+														<h6 class="currsor-point opacity-text font-16">${value.replied_user_name}</h6>
+														<p class="mb-0 font-14">${value.discussion_question}</p>
+													</div>
+												</div>
+												<div class="attachment-grid">`
+						$.each(value.attachments, function (key, value1) {
+							if (value1.image) {
+								reply_content += `
+														<div>
+															<img src="${value1.filepath}" class="rounded" width="200" height="150" alt="answer-image">
+														</div>`
+							}
+						})
+
+						reply_content += `</div>
+												<div class="attachment-grid mt-3">`
+
+						$.each(value.attachments, function (key, value1) {
+							if (!value1.image) {
+								reply_content += `
+														<div>
+															<a href="${value1.filepath}">
+																<div id="attachment-icon">${value1.icon}</div>
+																<div class="opacity-text">${value1.filename}</div>
+															</a>
+														</div>`
+							}
+						})
+						reply_content += `</div>
+													<div class="mt-3 action-btn d-flex justify-content-between align-items-baseline">
+														<div class="left-action">
+															<div class="d-flex justify-content-initial align-items-baseline">
+																<div class="up-votes like-coure currsor-point mr-4">
+																	<svg width="40" height="49" viewBox="0 0 40 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<g filter="url(#filter0_d_0_1)">
+																		<path d="M35.9998 21.9999C35.9998 28.075 31.075 32.9998 24.9999 32.9998C18.9248 32.9998 14 28.075 14 21.9999C14 15.9248 18.9248 11 24.9999 11C31.075 11 35.9998 15.9248 35.9998 21.9999Z" fill="url(#paint0_linear_0_1)"/>
+																		</g>
+																		<path d="M24.0497 17.0494C24.4731 16.3161 25.5315 16.3161 25.9549 17.0494L29.7654 23.6494C30.1888 24.3827 29.6595 25.2993 28.8128 25.2993H21.1918C20.345 25.2993 19.8158 24.3827 20.2392 23.6494L24.0497 17.0494Z" fill="white"/>
+																		<defs>
+																		<filter id="filter0_d_0_1" x="0.8001" y="8.36849e-05" width="48.3998" height="48.3998" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+																		<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+																		<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+																		<feOffset dy="2.19998"/>
+																		<feGaussianBlur stdDeviation="6.59995"/>
+																		<feComposite in2="hardAlpha" operator="out"/>
+																		<feColorMatrix type="matrix" values="0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0 0.112772 0 0 0 0.24 0"/>
+																		<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+																		<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+																		</filter>
+																		<linearGradient id="paint0_linear_0_1" x1="35.9998" y1="32.9998" x2="-7.04449" y2="11.4061" gradientUnits="userSpaceOnUse">
+																		<stop stop-color="#538B9D"/>
+																		<stop offset="0.639133" stop-color="#7960A0"/>
+																		</linearGradient>
+																		</defs>
+																	</svg>
+																	<span>${value.discussion_upvote}</span>
+																</div>
+																<div class="down-votes like-coure currsor-point mr-4">
+																	<svg width="25" height="25" viewBox="0 2 25 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<circle cx="11.9024" cy="11.0001" r="10.9999" transform="rotate(-180 11.9024 11.0001)" fill="url(#paint0_linear_0_2)"></circle>
+																		<path d="M12.8527 15.9486C12.4293 16.682 11.3708 16.682 10.9474 15.9486L7.13695 9.34869C6.71356 8.61537 7.24279 7.69871 8.08957 7.69871L15.7105 7.69871C16.5573 7.69871 17.0865 8.61537 16.6632 9.3487L12.8527 15.9486Z" fill="white"></path>
+																		<defs>
+																		<linearGradient id="paint0_linear_0_2" x1="-33.0455" y1="37.2165" x2="27.7076" y2="27.4064" gradientUnits="userSpaceOnUse">
+																		<stop stop-color="white"></stop>
+																		<stop offset="0.0001" stop-color="#874EFF"></stop>
+																		<stop offset="1" stop-color="#F05965"></stop>
+																		</linearGradient>
+																		</defs>
+																	</svg>
+																	<span>${value.discussion_downvote}</span>
+																</div>
+															</div>
+														</div>
+														<div class="dots-action pos-rel">
+															<div class="right-action-dots currsor-point">
+																<svg width="29" height="8" viewBox="0 0 29 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<ellipse class="icon-color-chage" cx="3.5" cy="3.98184" rx="3.5" ry="3.80411"/>
+																	<ellipse class="icon-color-chage" cx="14.5" cy="3.98184" rx="3.5" ry="3.80411"/>
+																	<ellipse class="icon-color-chage" cx="25.5" cy="3.98184" rx="3.5" ry="3.80411"/>
+																</svg>
+															</div>
+
+															<div class="right-action-detail position-absolute remove-underline-a d-none">
+																<a href="${value.edit_url}" class="col currsor-point"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<path class="icon-color-chage mr-2" fill-rule="evenodd" clip-rule="evenodd" d="M0.859007 9.56668L9.45252 1.14293C10.5582 0.0591282 12.3515 0.0591282 13.4571 1.14293L14.6049 2.26807C15.7106 3.35187 15.7106 5.10975 14.6049 6.19355L5.97752 14.6505C5.48419 15.1341 4.81534 15.4055 4.11721 15.4055H0.583989C0.255764 15.4055 -0.00799464 15.1404 0.00018525 14.8187L0.0890619 11.324C0.106732 10.6635 0.382447 10.0338 0.859007 9.56668ZM13.7787 3.0777L12.6308 1.95256C11.9813 1.31587 10.9275 1.31587 10.278 1.95256L9.61088 2.60651L13.1119 6.03764L13.7787 5.38405C14.4282 4.74736 14.4282 3.71439 13.7787 3.0777ZM1.68449 10.3763L8.785 3.41607L12.286 6.8472L5.15125 13.841L5.05635 13.9262C4.79423 14.1415 4.46214 14.2606 4.11682 14.2606L1.1821 14.2602L1.25626 11.3534C1.26607 10.9866 1.41959 10.636 1.68449 10.3763ZM15.9623 14.8332C15.9623 14.5171 15.7008 14.2608 15.3783 14.2608H9.28564L9.20639 14.266C8.92135 14.3039 8.70165 14.5434 8.70165 14.8332C8.70165 15.1494 8.96311 15.4057 9.28564 15.4057H15.3783L15.4576 15.4005C15.7426 15.3626 15.9623 15.123 15.9623 14.8332Z" fill="white"/>
+																	</svg> Edit </a>
+																<div class="mb-0 col currsor-point delete-my-post" postid="${value.postid}"><svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+																	<path class="icon-color-chage mr-2"  fill-rule="evenodd" clip-rule="evenodd" d="M11.5135 1.23298C11.2592 0.484433 10.5987 0 9.85061 0H6.18996L6.0508 0.00561472C5.31494 0.0651731 4.68702 0.593234 4.49364 1.33491L4.27406 2.45476L4.24832 2.55333C4.14318 2.87257 3.84922 3.09413 3.51344 3.09413L3.51177 3.09425H0.687654L0.599644 3.10032C0.283066 3.14436 0.0390625 3.42264 0.0390625 3.75937C0.0390625 4.1267 0.329447 4.42449 0.687654 4.42449H15.3527L15.4407 4.41841C15.7573 4.37437 16.0013 4.09609 16.0013 3.75937C16.0013 3.39203 15.7109 3.09425 15.3527 3.09425H12.5393C12.5353 3.09417 12.5312 3.09413 12.5271 3.09413L12.4278 3.08761C12.1019 3.04453 11.8324 2.79226 11.7665 2.45449L11.5564 1.37638L11.5135 1.23298ZM10.6048 3.09425C10.5753 3.01912 10.5497 2.94172 10.5284 2.86228L10.4945 2.71543L10.2938 1.67852C10.2469 1.4986 10.102 1.36689 9.92716 1.33677L9.85061 1.33024H6.18996C6.00798 1.33024 5.84621 1.43946 5.77902 1.57674L5.75623 1.63705L5.54604 2.7157C5.52038 2.84707 5.48323 2.9736 5.43577 3.09425H10.6048ZM14.2088 5.95946C14.5361 5.98652 14.787 6.25829 14.8044 6.58543L14.796 6.76783L14.5171 10.1831L14.2245 13.516C14.1626 14.1813 14.1072 14.7425 14.0594 15.1843C13.8932 16.7239 12.8938 17.6759 11.3872 17.7041C9.0397 17.7474 6.78316 17.747 4.59186 17.6996C3.12888 17.6689 2.14426 16.7066 1.98099 15.1905L1.86814 14.0736L1.67096 11.907L1.46896 9.52959L1.23801 6.67572C1.2093 6.30957 1.47548 5.98888 1.83254 5.95944C2.15984 5.93246 2.44988 6.15958 2.51806 6.47965L2.5446 6.74122L2.76146 9.41666L2.99826 12.1898C3.10447 13.3903 3.19659 14.3618 3.27031 15.0443C3.36335 15.9082 3.81827 16.3529 4.61881 16.3697C6.79299 16.4167 9.0327 16.4171 11.3637 16.3741C12.2129 16.3582 12.6751 15.9179 12.7701 15.0377L12.8825 13.9268C12.9153 13.5844 12.9505 13.2064 12.9877 12.7958L13.2247 10.0685L13.5102 6.56897C13.5366 6.23334 13.8016 5.97607 14.1206 5.95826L14.2088 5.95946Z" fill="white"/>
+																	</svg> Delete </div>
+															</div>
+														</div>
+													</div>
+												<div class="purchase-line"><hr></div>
+											</div>`
+					})
+
+					reply_content += `<div class="ml-3">
+											<a href="${M.cfg.wwwroot}/theme/tekstac_theme/discussion_post.php?reply=${postid}" class="btn btn-secondary">Add Comment</a>
+										</div></div>`;
+					$('#post-comment-section-' + postid).empty().append(reply_content);
+
+					$('.right-action-dots').click(function () {
+						$(this).closest('.dots-action').children('.right-action-detail').toggleClass('d-none');
+					});
+					deleteModalHandle();
+
+				}).fail(function (jqXHR, textStatus, errorThrown) {
+
+				})
+			}
+		});
+
+		function deleteModalHandle() {
+			$('.delete-my-post').click(function () {
+				var postid = $(this).attr("postid");
+
+				$('#delete-head').empty().text("Confirm");
+				$('#delete-message').empty().text("Are you sure you want to delete this post and all replies?");
+				$('#delete-confirm-continue').removeClass("d-none");
+				$('#delete-confirm-continue').attr("postid", postid);
+				$('#post-delete-confirmation-modal').modal("show");
+			});
+
+			$('#delete-confirm-continue').click(function () {
+				var postid = $(this).attr("postid");
+				$('#post-delete-confirmation-modal').modal("hide");
+
+				$.post(M.cfg.wwwroot + '/theme/tekstac_theme/ajax.php', {
+					action: 'deletediscussioncomment', postid: postid
+				}).done(function (data, textStatus, jqXHR) {
+					if (data.error == '') {
+						location.reload();
+					} else {
+						$('#delete-head').empty().text("Warning");
+						$('#delete-message').empty().text(data.error);
+						$('#delete-confirm-continue').addClass("d-none");
+						$('#post-delete-confirmation-modal').modal("show");
+					}
+				}).fail(function (jqXHR, textStatus, errorThrown) { })
+			});
+		}
+		deleteModalHandle();
+	}
+
+	// Path reviews page
+	if ($('body').find('.path-reviews').length !== 0) {
+
+		$(".my-rating").starRating({
+			starSize: 20,
+			activeColor: '#f94452',
+			readOnly: true,
+		});
+
+		// Create the defaults once
+		var pluginName = 'starRating';
+		var noop = function () { };
+		var defaults = {
+			totalStars: 5,
+			useFullStars: false,
+			starShape: 'straight',
+			emptyColor: 'lightgray',
+			hoverColor: 'orange',
+			activeColor: '#F05965',
+			ratedColor: 'crimson',
+			useGradient: true,
+			readOnly: false,
+			disableAfterRate: true,
+			baseUrl: false,
+			starGradient: {
+				start: '#FEF7CD',
+				end: '#FF9511'
+			},
+			strokeWidth: 4,
+			strokeColor: 'black',
+			initialRating: 0,
+			starSize: 40,
+			callback: noop,
+			onHover: noop,
+			onLeave: noop
+		};
+	}
+
+	$('.expand-collaspe-button ').click(function () {
+		$('.panel-collapse').toggleClass('show')
+		var text = $('.change-txt').text() == 'Expand All' ? 'Collapse All' : 'Expand';
+		$('.change-txt').text(text);
+	});
+
+	//remove container for design standard
+	$('.pagelayout-mydashboard #region-main-box #region-main section.block_tekdashboard .card-body').removeClass('container');
+});
+
+$(window).on("load", readyFn);
+
+function readyFn(jQuery) {
+	// loader remove
+	// $('html, body').css('overflowY', 'auto');
+	$('.load-data').fadeOut(100);
+	$('[data-region="drawer"]').css('width', '0px', '!important');
+	if ($('body').hasClass('drawer-open-left')) {
+
+		$('body').addClass('add-margin');
+		//$('[data-region="drawer"]').addClass('add-width');
+
+	} else {
+		$('body').removeClass('add-margin');
+		//$('[data-region="drawer"]').removeClass('add-width');
+
+	}
+
+	if ($('body').hasClass('path-mod')) {
+		$('#region-main').removeClass('mt-5');
+	}
+}
+jQuery(document).ready(function () {
+
+
+	$(document).on('click', '.more-tags-but a.show-li', function (event) {
+		var but = $(this).closest('td.tags');
+		$(this).addClass('hide');
+        
+        but.find('.hide_data_li').removeClass('hide');
+		but.find('.more-tags').removeClass('hide');
+        but.find('.hide-li').removeClass('hide');
+	});
+	$(document).on('click', '.more-tags-but a.hide-li', function (event) {
+		var but = $(this).closest('td.tags');
+		but.find('.more-tags').addClass('hide');
+        but.find('.hide-li').addClass('hide');
+        but.find('.hide_data_li').addClass('hide');
+		but.find('a.show-li').removeClass('hide');
+		
+	});
+
+    if($('#page-question-edit .full-tags-data').length)
+    {
+		$('#page-question-edit #categoryquestions tbody tr').each(function(){
+			var i =0;
+			
+			if($(this).find('td.tags li').length)
+			{
+				
+				if($(this).find('td.tags li').length>3)
+				{
+					$(this).find('td.tags li').each(function(){
+						i++;
+						if(Number(i)>3)
+						{
+							$(this).addClass('hide_data_li');
+							$(this).addClass('hide');
+							$(this).closest('td.tags').find('.show-li').removeClass('hide');
+							$(this).closest('td.tags').find('.more-tags').removeClass('hide');
+							$(this).closest('td.tags').find('.hide-li').addClass('hide');
+						}
+					});
+				}
+				else{
+					$(this).find('td.tags .more-tags').addClass('hide');
+					$(this).find('td.tags .show-li').addClass('hide');
+					$(this).find('td.tags .hide-li').addClass('hide');
+				}
+			}
+			else{
+				$(this).find('td.tags .more-tags').addClass('hide');
+				$(this).find('td.tags .show-li').addClass('hide');
+				$(this).find('td.tags .hide-li').addClass('hide');
+			}
+		});
+        
+    }
+
+});

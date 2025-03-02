@@ -1,0 +1,70 @@
+.product-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.card-container {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.parallax-card {
+  min-width: 20%; /* Desktop view - Show 5 cards at once */
+  box-sizing: border-box;
+  padding: 10px;
+  transition: transform 0.5s ease-in-out;
+
+  img {
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Buttons for navigation */
+.slider-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(54, 0, 250, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.slider-button.prev {
+  left: 10px;
+}
+
+.slider-button.next {
+  right: 10px;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+  .parallax-card {
+    min-width: 50%; /* Show 2 cards at a time on tablet screens */
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .parallax-card {
+    min-width: 100%; /* Show 1 card at a time on mobile screens */
+    padding: 5px;
+  }
+
+  .slider-button {
+    padding: 8px; /* Adjust button size for mobile */
+  }
+
+  .slider-button.prev {
+    left: 5px;
+  }
+
+  .slider-button.next {
+    right: 5px;
+  }
+}

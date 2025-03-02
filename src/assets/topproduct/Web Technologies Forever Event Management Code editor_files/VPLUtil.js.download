@@ -1,0 +1,1122 @@
+// This file is part of VPL for Moodle - http://vpl.dis.ulpgc.es/
+//
+// VPL for Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// VPL for Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with VPL for Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Tools for IDE and related
+ * @package mod_vpl
+ * @copyright 2016 Juan Carlos Rodríguez-del-Pino
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author Juan Carlos Rodríguez-del-Pino <jcrodriguez@dis.ulpgc.es>
+ */
+
+(function() {
+    VPL_Util = {};
+    VPL_Util.doNothing = function() {};
+    // Get scrollBarWidth.
+    VPL_Util.scrollBarWidth = function() {
+        var parent, child, width;
+        parent = $JQVPL('<div style="width:50px;height:50px;overflow:auto"><div/></div>').appendTo('body');
+        child = parent.children();
+        width = child.innerWidth() - child.height(99).innerWidth();
+        parent.remove();
+        return width;
+    };
+    VPL_Util.sanitizeHTML = function(t) {
+        return $JQVPL('<div>' + t + '</div>').html();
+    };
+    VPL_Util.sanitizeText = function(s) {
+        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    };
+
+    VPL_Util.setProtocol = function(coninfo) {
+        var secure;
+        switch (coninfo.wsProtocol) {
+            case 'always_use_wss':
+                secure = true;
+                break;
+            case 'always_use_ws':
+                secure = false;
+                break;
+            default:
+                secure = window.location.protocol == 'https:';
+        }
+        var URLBase = (secure ? 'wss://' : 'ws://') + coninfo.server;
+        coninfo.secure = secure;
+        coninfo.portToUse = secure ? coninfo.securePort : coninfo.port;
+        URLBase += ':' + coninfo.portToUse + '/';
+        coninfo.monitorURL = URLBase + coninfo.monitorPath;
+        coninfo.executionURL = URLBase + coninfo.executionPath;
+    };
+    VPL_Util.ArrayBuffer2String = function(data) {
+        var view = new Uint8Array(data);
+        var chunks = [];
+        var chunkSize = 32000;
+        for (var i = 0, len = view.length; i < len; i += chunkSize) {
+            chunks.push(String.fromCharCode.apply(String, view.subarray(i, Math.min(i + chunkSize, len))));
+        }
+        return chunks.join('');
+    };
+    VPL_Util.String2ArrayBuffer = function(data) {
+        var len = data.length;
+        var ret = new ArrayBuffer(len);
+        var u8 = new Uint8Array(ret);
+        for (var i = 0; i < len; i++) {
+            u8[i] = data.charCodeAt(i);
+        }
+        return ret;
+    };
+
+    (function() {
+        var file_unique_id = 0;
+        VPL_Util.getUniqueId = function() {
+            return file_unique_id++;
+        };
+    })();
+    (function() {
+        var reg_ext = /\.([^.]*)$/;
+        var reg_img = /^(gif|jpg|jpeg|png|ico\xlsx)$/i;
+
+        var reg_bin = '';
+        var tempClass = '';
+        tempElement = document.getElementById('vplide');
+        if (tempElement) {
+            tempClass = tempElement.className;
+        }
+        var regexBinary = tempClass.split("binaryfilesext:").pop().trim();
+        if (regexBinary == null) {
+            reg_bin = /^(zip|jar|pdf|xlsx)$/i;
+        } else {
+            reg_bin = new RegExp("^(" + regexBinary + ")$", "i");
+        }
+        VPL_Util.fileExtension = function(fileName) {
+
+            //If we have choosen any option from the drop down
+            var select_lang = $('#select_language').val();
+            if (select_lang !== '' && select_lang !== undefined) {
+                return select_lang;
+            }
+
+            var res = reg_ext.exec(fileName);
+            return res !== null ? res[1] : '';
+
+        };
+        VPL_Util.isImage = function(fileName) {
+            return reg_img.test(VPL_Util.fileExtension(fileName));
+        };
+        VPL_Util.isBinary = function(fileName) {
+            return VPL_Util.isImage(fileName) || reg_bin.test(VPL_Util.fileExtension(fileName));
+        };
+
+        var regInvalidFileName = /[\x00-\x1f]|[:-@]|[{-~]|\\|\[|\]|[\/\^`´]|^\-|^ | $|\.\./;
+        VPL_Util.validFileName = function(fileName) {
+            if (fileName.length < 1) {
+                return false;
+            }
+            if (fileName.length > 128) {
+                return false;
+            }
+            return !(regInvalidFileName.test(fileName));
+        };
+    })();
+    VPL_Util.getCurrentTime = function() {
+        return parseInt((new Date()).valueOf() / 1000);
+    };
+    VPL_Util.encodeBinary = function(name, data) {
+        if (!VPL_Util.isBinary(name)) {
+            return btoa(unescape(encodeURIComponent(data)));
+        }
+        return btoa(VPL_Util.ArrayBuffer2String(data));
+    };
+
+    VPL_Util.decodeBinary = function(name, data) {
+        var decoded = atob(data);
+        if (!VPL_Util.isBinary(name)) {
+            return decodeURIComponent(escape(decoded));
+        }
+        return VPL_Util.String2ArrayBuffer(decoded);
+    };
+
+    VPL_Util.validPath = function(path) {
+        if (path.length > 256) {
+            return false;
+        }
+        var dirs = path.split("/");
+        for (var i = 0; i < dirs.length; i++) {
+            if (!VPL_Util.validFileName(dirs[i])) {
+                return false;
+            }
+        }
+        return true;
+    };
+    VPL_Util.getFileName = function(path) {
+        var dirs = path.split("/");
+        return dirs[dirs.length - 1];
+    };
+    VPL_Util.dataFromURLData = function(data) {
+        return data.substr(data.indexOf(',') + 1);
+    };
+    VPL_Util.readZipFile = function(data, save, progressBar, end) {
+        var ab = VPL_Util.ArrayBuffer2String(data);
+        var unzipper = new JUnzip(ab);
+        if (unzipper.isZipFile()) {
+            unzipper.readEntries();
+            var out = unzipper.entries.length;
+
+            function process(i) {
+                if (i >= out || progressBar.isClosed()) {
+                    end && end();
+                    return;
+                }
+                var entry = unzipper.entries[i];
+                var fileName = entry.fileName;
+                var data;
+                // Is directory entry then skip.
+                if (fileName.match(/\/$/)) {
+                    process(i + 1);
+                } else {
+                    progressBar.processFile(fileName);
+                    var uncompressed = '';
+                    if (entry.compressionMethod === 0) {
+                        // Plain file.
+                        uncompressed = entry.data;
+                    } else if (entry.compressionMethod === 8) {
+                        uncompressed = JSInflate.inflate(entry.data);
+                    }
+                    data = VPL_Util.String2ArrayBuffer(uncompressed);
+                    if (VPL_Util.isBinary(fileName)) {
+                        // If binary use as arrayBuffer.
+                        if (!save({ name: fileName, contents: btoa(uncompressed), encoding: 1 })) {
+                            i = out;
+                        }
+                        process(i + 1);
+                        progressBar.endFile();
+                    } else {
+                        blob = new Blob([data], {
+                            type: 'text/plain'
+                        });
+                        fr = new FileReader();
+                        fr.onload = function(e) {
+                            if (!save({ name: fileName, contents: e.target.result, encoding: 0 })) {
+                                i = out;
+                            }
+                            process(i + 1);
+                            progressBar.endFile();
+                        };
+                        fr.readAsText(blob);
+                    }
+                }
+            }
+            process(0);
+        }
+    };
+
+    VPL_Util.readSelectedFiles = function(filesToRead, save, end) {
+
+        //Prevent Upload of Folders with appropriate error message
+        var extension_info = filesToRead[0].name.lastIndexOf(".");
+        if (extension_info == -1) {
+            VPL_Util.showErrorMessage("Cannot Upload folders. zip the contents inside the folder and upload again");
+            return false;
+        }
+        // Process all File objects.
+        var pb = new VPL_Util.progressBar('import', 'import');
+        var filePending = 0;
+        if (!end) {
+            end = VPL_Util.doNothing;
+        }
+        pb.processFile = function(name) {
+            pb.setLabel(name);
+            filePending++;
+        };
+        pb.endFile = function() {
+            filePending--;
+            if (filePending == 0) {
+                end();
+                pb.close();
+            }
+        };
+
+        function readSecuencial(sec) {
+            if (sec >= filesToRead.length || pb.isClosed()) {
+                return;
+            }
+            var f = filesToRead[sec];
+            pb.processFile(f.name);
+            var binary = VPL_Util.isBinary(f.name);
+            var reader = new FileReader();
+            // console.log(f.name);
+            var ext = VPL_Util.fileExtension(f.name).toLowerCase();
+            reader.onload = function(e) {
+                var goNext = false;
+                if (binary) {
+                    if (ext == 'zip') {
+                        try {
+                            VPL_Util.readZipFile(e.target.result, save, pb, function() { readSecuencial(sec + 1); });
+                        } catch (e) {
+                            VPL_Util.showErrorMessage(e + " : " + f.name);
+                        }
+                    } else {
+                        var data = VPL_Util.dataFromURLData(e.target.result);
+                        goNext = save({ name: f.name, contents: data, encoding: 1 });
+                    }
+                } else {
+                    goNext = save({ name: f.name, contents: e.target.result, encoding: 0 });
+                }
+                // Load next file if OK.
+                if (goNext) {
+                    readSecuencial(sec + 1);
+                }
+                pb.endFile();
+            };
+            if (binary) {
+                if (ext == 'zip') {
+                    reader.readAsArrayBuffer(f);
+                } else {
+                    reader.readAsDataURL(f);
+                }
+            } else {
+                reader.readAsText(f);
+            }
+        }
+        readSecuencial(0);
+    };
+    (function() {
+        var MIME = {
+            'gif': 'image/gif',
+            'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'png': 'image/png',
+            'ico': 'image/vnd.microsoft.icon',
+            'pdf': 'application/pdf',
+            'xlsx': 'application/xlsx'
+        };
+        VPL_Util.getMIME = function(fileName) {
+            var ext = VPL_Util.fileExtension(fileName);
+            if (ext in MIME) {
+                return MIME[ext];
+            }
+            return 'application/octet-stream';
+        };
+        VPL_Util.getTimeLeft = function(timeLeft) {
+            var res = '';
+            var minute = 60;
+            var hour = 60 * minute;
+            var day = 24 * hour;
+            if (timeLeft < 0) {
+                res += '-';
+                timeLeft = -timeLeft;
+            }
+            var days = parseInt(timeLeft / day);
+            timeLeft -= days * day;
+            if (days != 0) {
+                res += days + 'T';
+            }
+            var hours = parseInt(timeLeft / hour);
+            timeLeft -= hours * hour;
+            var minutes = parseInt(timeLeft / minute);
+            timeLeft -= minutes * minute;
+            var seconds = parseInt(timeLeft);
+            res += ('00' + hours).substr(-2) + ':';
+            res += ('00' + minutes).substr(-2);
+            if (days == 0) {
+                res += ':' + ('00' + seconds).substr(-2);
+            }
+            return res;
+        };
+    })();
+    (function() {
+        var maplang = {
+            'ada': 'ada',
+            'ads': 'ada',
+            'adb': 'ada',
+            'asm': 'assembly_x86',
+            'bash': 'bash',
+            'c': 'c_cpp',
+            'C': 'c_cpp',
+            'cases': 'cases',
+            'cbl': 'cobol',
+            'cob': 'cobol',
+            'coffee': 'coffee',
+            'cc': 'c_cpp',
+            'cpp': 'c_cpp',
+            'hxx': 'c_cpp',
+            'h': 'c_cpp',
+            'clj': 'clojure',
+            'cs': 'csharp',
+            'css': 'css',
+            'd': 'd',
+            'dart': 'dart',
+            'erl': 'erlang',
+            'hrl': 'erlang',
+            /*
+             * 'f' : 'fortran', // Not available in ace editor 'f77' :
+             * 'fortran',
+             */
+            'go' : 'go',
+            'groovy' : 'groovy',
+            'hs' : 'haskell',
+            'htm' : 'html',
+            'html' : 'html',
+            'hx' : 'haxe',
+            'java' : 'java',
+            'js' : 'javascript',
+            'json' : 'json',
+            'jsp' : 'jsp',
+            'jsx' : 'jsx',
+            'scm' : 'scheme',
+            's' : 'scheme',
+            'm' : 'matlab',
+            'lisp' : 'lisp',
+            'lsp' : 'lisp',
+            'lua' : 'lua',
+            'pas' : 'pascal',
+            'p' : 'pascal',
+            'perl' : 'perl',
+            'prl' : 'perl',
+            'php' : 'php',
+            'pro' : 'prolog',
+            'pl' : 'prolog',
+            'py' : 'python',
+            'R': 'r', 'r' : 'r',
+            'rb' : 'ruby',
+            'ruby' : 'ruby',
+            'scala' : 'scala',
+            'sh' : 'sh',
+            'sql' : 'sql',
+            'tcl' : 'tcl',
+            'ts'  : 'typescript',
+            'tsx' : 'tsx',
+            'v' : 'verilog',
+            'vhd' : 'vhdl',
+            'vhdl' : 'vhdl',
+            'xml' : 'xml',
+            'yaml' : 'yaml'
+        };
+        VPL_Util.langType = function(ext) {
+            if (ext in maplang) {
+                return maplang[ext];
+            }
+            return 'plain_text';
+        };
+    })();
+    (function() {
+        var i18n = {};
+        VPL_Util.str = function(key) {
+            if (!i18n[key]) {
+                return '{' + key + '}';
+            }
+            return i18n[key];
+        };
+        VPL_Util.set_str = function(newi18n) {
+            for (var key in newi18n) {
+                i18n[key] = newi18n[key];
+            }
+            VPL_Util.dialogbase_options = {
+                autoOpen: false,
+                minHeight: 10,
+                width: 'auto',
+                closeText: VPL_Util.str('cancel'),
+                modal: true,
+                dialogClass: 'vpl_ide vpl_ide_dialog'
+            };
+
+        };
+    })();
+    (function() {
+        var delayedActions = {};
+        var reg = /function ([^\(]*)/;
+
+        function functionName(func) {
+            var fs = func.toString();
+            var res = reg.exec(fs);
+            if (res === null) {
+                return fs;
+            }
+            return res[1];
+        }
+        VPL_Util.delay = function(func, arg1, arg2) {
+            var fn = functionName(func);
+            if (delayedActions[fn]) {
+                clearTimeout(delayedActions[fn]);
+            }
+            delayedActions[fn] = setTimeout(function() {
+                func(arg1, arg2);
+                delayedActions[fn] = false;
+            }, 100);
+        };
+        VPL_Util.longDelay = function(func, arg1, arg2) {
+            var fn = functionName(func);
+            if (delayedActions[fn]) {
+                clearTimeout(delayedActions[fn]);
+            }
+            delayedActions[fn] = setTimeout(function() {
+                func(arg1, arg2);
+                delayedActions[fn] = false;
+            }, 1000);
+        };
+    })();
+    VPL_Util.iconModified = function() {
+        var html = '<span title="' + VPL_Util.str('modified') + '" class="vpl_ide_charicon">';
+        html += '<i class="fa fa-star"></i>' + '</span> ';
+        return html;
+    };
+    VPL_Util.iconDelete = function() {
+        var html = ' <span title="' + VPL_Util.str('delete') + '" class="vpl_ide_charicon vpl_ide_delicon">';
+        html += '<i class="fa fa-trash"></i>' + '</span> ';
+        return html;
+    };
+    VPL_Util.iconClose = function() {
+        var html = ' <span title="' + VPL_Util.str('closebuttontitle');
+        html += '" class="vpl_ide_charicon vpl_ide_closeicon">' + '<i class="fa fa-remove"></i>' + '</span> ';
+        return html;
+    };
+    VPL_Util.iconRequired = function() {
+        var html = ' <span title="' + VPL_Util.str('required') + '" class="vpl_ide_charicon">';
+        html += '<i class="fa fa-shield"></i>' + '</span> ';
+        return html;
+    };
+    VPL_Util.iconFolder = function() {
+        return '<i class="fa fa-folder-open-o"></i>';
+    };
+    VPL_Util.iconPencil = function() {
+        return '&nbsp;<i class="fa fa-pencil"></i>';
+    };
+    (function() {
+        var menu_icons = {
+            'filelist': 'folder',
+            'filelistclose': 'folder-open',
+            'new': 'file',
+            'rename': 'pencil',
+            'delete': 'trash',
+            'close': 'remove',
+            'comments': 'commenting',
+            'import': 'upload',
+            'print': 'print',
+            'edit': 'edit',
+            'undo': 'undo',
+            'redo': 'repeat',
+            'select_all': 'location-arrow',
+            'find': 'search',
+            'find_replace': 'exchange',
+            'next': 'search-plus',
+            'resetfiles': 'refresh',
+            'download': 'download',
+            'fullscreen': 'expand',
+            'regularscreen': 'compress',
+            'save': 'save',
+            'sort': 'sort-amount-asc',
+            'run': 'rocket',
+            'debug': 'bug',
+            'evaluate': 'check-square-o',
+            'console': 'terminal',
+            'about': 'question',
+            'info': 'info-circle',
+            'alert': 'warning',
+            'trash': 'trash',
+            'retrieve': 'download',
+            'spinner': 'refresh fa-spin',
+            'keyboard': 'keyboard-o',
+            'clipboard': 'clipboard',
+            'timeleft': 'clock-o',
+            'copy': 'copy',
+            'paste': 'paste',
+            'resize': 'arrows-alt',
+            'graphic': 'picture-o',
+            'send': 'send'
+        };
+        VPL_Util.gen_icon = function(icon, size) {
+            if (!menu_icons[icon]) {
+                return '';
+            }
+            var classes = 'fa fa-';
+            if (!size) {
+                classes += 'lg';
+            } else {
+                classes += size;
+            }
+            classes += ' fa-' + menu_icons[icon];
+            return ret = "<i class='" + classes + "'></i>";
+        };
+    })();
+    // UI operations.
+    VPL_Util.setTitleBar = function(dialog, type, icon, buttons, handler) {
+        title = $JQVPL(dialog).parent().find("span.ui-dialog-title");
+
+        function genButton(e) {
+            var html = "<a id='vpl_" + type + "_" + e + "' href='#' title='" + VPL_Util.str(e) + "'>";
+            html += VPL_Util.gen_icon(e, 'fw') + "</a>";
+            return html;
+        }
+        var html = VPL_Util.gen_icon(icon);
+        html += " <span class='" + type + "-title-buttons'></span>";
+        html += "<span class='" + type + "-title-text'></span>";
+        title.html(html);
+        titleButtons = title.find("span." + type + "-title-buttons");
+        titleText = title.find("span." + type + "-title-text");
+        html = "";
+        for (var i = 0; i < buttons.length; i++) {
+            html += genButton(buttons[i]);
+        }
+        titleButtons.html(html);
+        for (var i = 0; i < handler.length; i++) {
+            title.find('#vpl_' + type + '_' + buttons[i]).button().click(handler[i]);
+        }
+        titleButtons.on('focus', '*', function() { $JQVPL(this).blur(); });
+        return titleText;
+    };
+    VPL_Util.progressBar = function(title, message, onUserClose) {
+        var labelHTML = '<span class="vpl_ide_progressbarlabel"></span>';
+        var sppiner = '<div class="vpl_ide_progressbaricon"><div class="snippet" data-title="dot-spin"><div class="stage"><div class="dot-spin"></div></div></div>' /* + VPL_Util.gen_icon('spinner')*/ + '</div>';
+        var pbHTML = ' <div class="vpl_ide_progressbar d-flex justify-content-center align-items-center">' + sppiner + labelHTML + '</div>';
+        var HTML = '<div class="vpl_ide_dialog" style="display: none;">' + pbHTML + '</div>';
+        var dialog = $JQVPL(HTML);
+        $JQVPL('body').append(dialog);
+        var progressbar = dialog.find('.vpl_ide_progressbar');
+        var label = progressbar.find('.vpl_ide_progressbarlabel');
+        dialog.dialog({
+            'title': VPL_Util.str(title),
+            resizable: false,
+            autoOpen: false,
+            width: 250,
+            minHeight: 20,
+            height: 20,
+            modal: true,
+            dialogClass: 'vpl_ide vpl_ide_dialog',
+            close: function() {
+                if (dialog) {
+                    $JQVPL(dialog).remove();
+                    dialog = false;
+                    if (onUserClose) {
+                        onUserClose();
+                    }
+                    onUserClose = false;
+                }
+            }
+        });
+        this.setLabel = function(t, icon) {
+            if (dialog) {
+                if (t.toLowerCase() != 'loading') {
+                    label.text(t);
+                }
+                if (icon) {
+                    label.html(VPL_Util.gen_icon(icon) + ' ' + label.html());
+                }
+            }
+            if(title == 'evaluate' || title == 'run' || title == 'retrieve') {
+                $('#vpl-ide-bottom-tab-wrapper .loading-overlay-section .loading-lable').text(t);
+            }
+        };
+        this.close = function() {
+            onUserClose = false;
+
+            var evaluationHead = false;
+            var myEle = document.getElementById("evaluation_result_head");
+            if (myEle != null) {
+                evaluationHead = true
+            }
+
+            if (dialog) {
+                dialog.dialog('close');
+                //              to scroll to the evaluation result
+                if (title == "evaluate" && evaluationHead) {
+                    document.querySelector('#evaluation_result_head').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            } else {
+                //              to scroll to the evaluation result
+                if (title == "evaluate" && evaluationHead) {
+                    document.querySelector('#evaluation_result_head').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+
+            }
+
+            if(title == 'retrieve') {
+                $('#vpl-ide-bottom-tab-wrapper .vpl-ide-content-wrapper .tab-content > div').removeClass('blur-content');
+                $('#vpl-ide-bottom-tab-wrapper .vpl-ide-content-wrapper .tab-content > .loading-overlay-section').addClass('d-none');
+            }
+            if(title == 'retrieve') {
+                VPL_Util.updateRunEvaluateButtons(false);
+            }
+        };
+        this.isClosed = function() {
+            return dialog == false;
+        };
+        var titleTag = dialog.siblings().find('.ui-dialog-title');
+        titleTag.html(VPL_Util.gen_icon(title) + ' ' + titleTag.html());
+        this.setLabel(VPL_Util.str(message));
+
+        if(title != 'evaluate' && title != 'run' && title != 'retrieve') {
+            dialog.dialog('open');
+            dialog.dialog('option', 'height', 'auto');
+        }
+
+        if(title == 'run') {
+            $('#vpl-ide-bottom-tab-wrapper #vpl-bottom-tab-1 #vpl_dialog_terminal').addClass('blur-content');
+            $('#vpl-ide-bottom-tab-wrapper #vpl-bottom-tab-1 .loading-overlay-section').removeClass('d-none');
+        }
+
+        if(title == 'evaluate' || title == 'retrieve') {
+            $('#vpl-ide-bottom-tab-wrapper #vpl-bottom-tab-2 #evaluation_result_new').addClass('blur-content');
+            $('#vpl-ide-bottom-tab-wrapper #vpl-bottom-tab-2 .loading-overlay-section').removeClass('d-none');
+            VPL_Util.updateRunEvaluateButtons(true);
+        }
+    };
+    VPL_Util.showMessage = function(message, options) {
+        var message_dialog = $JQVPL('<div class="vpl_ide_dialog"></div>');
+        if (!options) {
+            options = {};
+        }
+        if (!options.icon) {
+            options.icon = 'info';
+        }
+        if (!options.title) {
+            options.title = VPL_Util.str('warning');
+        }
+        message_dialog.html(VPL_Util.gen_icon(options.icon) + ' <span class="dmessage">' + message + '</span>');
+        $JQVPL('body').append(message_dialog);
+        var message_buttons = {};
+        if (!options.ok) {
+            message_buttons[VPL_Util.str('ok')] = function() {
+                $JQVPL(this).dialog('close');
+            };
+        } else {
+            message_buttons[VPL_Util.str('ok')] = function() {
+                $JQVPL(this).dialog('close');
+                options.ok();
+            };
+            message_buttons[VPL_Util.str('cancel')] = function() {
+                $JQVPL(this).dialog('close');
+            };
+        }
+        if (options.next) {
+            message_buttons[VPL_Util.str('next')] = function() {
+                $JQVPL(this).dialog('close');
+                options.next();
+            };
+        }
+        if (options.close) {
+            options.oldClose = options.close;
+        }
+        message_dialog.dialog($JQVPL.extend({}, VPL_Util.dialogbase_options, {
+            title: options.title,
+            buttons: message_buttons,
+            close: function() {
+                $JQVPL(this).remove();
+                if (options.oldClose) {
+                    options.oldClose();
+                }
+            }
+        }));
+        message_dialog.dialog('open');
+        message_dialog.setMessage = function(men) {
+            $JQVPL(message_dialog).find('.dmessage').html(men);
+        };
+        return message_dialog;
+    };
+    VPL_Util.showErrorMessage = function(message, options) {
+        var currentOptions = $JQVPL.extend({}, VPL_Util.dialogbase_options, {
+            title: VPL_Util.str('error'),
+            icon: 'alert'
+        });
+        if (options) {
+            currentOptions = $JQVPL.extend(currentOptions, options);
+        }
+        return VPL_Util.showMessage(message, currentOptions);
+    };
+
+    VPL_Util.requestAction = function(action, title, data, URL, ok, error, contentlength = 0, keyStroke = 0, savetype = 0, selected_lang = '', selected_variation = '') {
+        var request = null;
+
+        if( action == 'evaluate_no_wss'){
+            checktitle = "evaluate_no_wss";
+        }
+
+        //Hiding the code saved label
+        $('#vpl-ide-bottom-tab-wrapper > .info-show-toast').removeClass('show-info');
+        var myEle = document.getElementById("code_saved");
+        if (myEle) {
+            myEle.style.display = "none";
+        }
+
+        //Hiding the code not saved label
+        var myElement = document.getElementById("code_notsaved");
+        if (myElement) {
+            myElement.style.display = "none";
+        }
+
+
+        if (title == '') {
+            title = 'connecting';
+        }
+
+        if(title == 'saving' && savetype != 1){
+            $('#vpl-ide-bottom-tab-wrapper > .info-show-toast').addClass('show-info');
+            $('#vpl-ide-bottom-tab-wrapper > .info-show-toast .info-show-text').text('Saving...');
+            // If label already exists
+            if (myEle) {
+                myEle.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+                    '<strong>Saving... </strong>';
+                // myEle.style.display = "block";
+            } else {
+                var my_elem = document.getElementById('vplide');
+
+                var span = document.createElement('div');
+                span.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+                    '<strong>Saving... </strong>';
+                span.className = 'alert alert-success alert-dismissible';
+                span.setAttribute("id", "code_saved");
+
+                // my_elem.parentNode.insertBefore(span, my_elem);
+            }
+        }
+
+        var pb;
+        //Hiding the progress bar for saving
+        if (title !== 'saving') {
+            pb = new VPL_Util.progressBar(action, title, function() {
+                if (request.readyState != 4) {
+                    request.abort();
+                }
+            });
+        }
+
+        const webdata = new Object();
+        webdata.web1 = contentlength;
+        webdata.web2 = keyStroke;
+        webdata.web3 = savetype;
+        webdata.web4 = selected_lang;
+        webdata.web6 = selected_variation;
+
+        request = $JQVPL.ajax({
+            async: true,
+            type: "POST",
+            url: URL + action + '&webdata=' + JSON.stringify(webdata),
+            'data': JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        }).done(function(response) {
+
+            if (!response.success) {
+                error(response.error);
+            } else {
+                ok(response.response);
+            }
+
+            if (title !== 'saving') {
+                pb.close();
+            }
+
+            // Only when it is successful show code saved message
+            if (response.success && title == 'saving' && savetype != 1) {
+                $('#vpl-ide-bottom-tab-wrapper > .info-show-toast').addClass('show-info');
+                $('#vpl-ide-bottom-tab-wrapper > .info-show-toast .info-show-text').text('Code Saved!');
+                var myEle = document.getElementById("code_saved");
+                if (myEle) {
+                    myEle.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+                        '<strong>Code Saved! </strong>';
+                    // myEle.style.display = "block";
+                } else {
+                    var my_elem = document.getElementById('vplide');
+                    var span = document.createElement('div');
+                    span.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+                        '<strong>Code Saved!</strong>';
+                    span.className = 'alert alert-success alert-dismissible';
+                    span.setAttribute("id", "code_saved");
+
+                    // my_elem.parentNode.insertBefore(span, my_elem);
+                }
+
+                //Hide code saved label after 5 seconds
+                setTimeout(function() {
+                    $('#vpl-ide-bottom-tab-wrapper > .info-show-toast').removeClass('show-info');
+                    document.getElementById("code_saved").style.display = "none";
+                }, 5000);
+
+            } else {
+                // some error so hide the saving lable
+                $('#vpl-ide-bottom-tab-wrapper > .info-show-toast').removeClass('show-info');
+                var myEle = document.getElementById("code_saved");
+                if (myEle) {
+                    document.getElementById("code_saved").style.display = "none";
+                }
+            }
+
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+
+            if (title == 'saving') {
+                $('#vpl-ide-bottom-tab-wrapper > .info-show-toast').removeClass('show-info');
+                var myEle = document.getElementById("code_saved");
+                if (myEle) {
+                    myEle.style.display = "none";
+                }
+
+
+                //Hiding the code saved label
+                var myEle = document.getElementById("code_notsaved");
+                // If label already exists
+                if (myEle) {
+                    myEle.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+                        '<strong>Connection Failed. Please contact your Administrator/Invigilator/ISP. </strong>';
+                    myEle.style.display = "block";
+                } else {
+                    var my_elem = document.getElementById('vplide');
+
+                    var span = document.createElement('div');
+                    span.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+                        '<strong>Connection Failed. Please contact your Administrator/Invigilator/ISP. </strong>';
+                    span.className = 'alert alert-warning alert-dismissible';
+                    span.setAttribute("id", "code_notsaved");
+
+                    my_elem.parentNode.insertBefore(span, my_elem);
+                }
+            } else {
+                pb.close();
+                if (errorThrown != 'abort') {
+                    error(VPL_Util.str('connection_fail') + ': ' + textStatus);
+                }
+            }
+        });
+    };
+    VPL_Util.supportWebSocket = function() {
+        if ("WebSocket" in window) {
+            return true;
+        }
+        return false;
+    };
+    VPL_Util.isAndroid = function() {
+        return window.navigator.userAgent.indexOf('Android') > -1;
+    };
+    VPL_Util.isFirefox = function() {
+        return window.navigator.userAgent.indexOf('Firefox') > -1;
+    };
+    VPL_Util.isMac = function() {
+        return window.navigator.userAgent.indexOf('Mac') > -1;
+    };
+    VPL_Util.clickServer = function(e) {
+        var w = 550;
+        var h = 450;
+        var left = (screen.width / 2) - (w / 2);
+        var top = (screen.height / 2) - (h / 2);
+        try {
+            var features = 'toolbar=no, location=no, directories=no, status=no, menubar=no';
+            features += ', resizable=yes, scrollbars=yes, copyhistory=no, width=' + w;
+            features += ', height=' + h + ', top=' + top + ', left=' + left;
+            var win = window.open($JQVPL(this).attr('href'), '_blank', features);
+            if (!win) {
+                return true;
+            }
+        } catch (e) {
+            return true;
+        }
+        e.preventDefault();
+        $JQVPL(this).parent().hide();
+        return false;
+    };
+    VPL_Util.acceptCertificates = function(servers, getLastAction) {
+        if (servers.length > 0) {
+            // Generate links dialog.
+            var html = VPL_Util.str('acceptcertificatesnote');
+            html += '<ol>';
+            for (var i in servers) {
+                var n = Number(i) + 1;
+                html += '<li><a href="' + servers[i] + '" target="_blank">Server ' + n + '</a><br /></ul>';
+            }
+            html += '</ol>';
+            var m = VPL_Util.showMessage(html, {
+                ok: function() {
+                    var action = getLastAction();
+                    if (action) {
+                        action();
+                    }
+                },
+                icon: 'unlocked',
+                title: VPL_Util.str('acceptcertificates')
+            });
+            $JQVPL(m).find('a').on('click keypress', VPL_Util.clickServer);
+        } else {
+            VPL_Util.showErrorMessage(VPL_Util.str('connection_fail'));
+        }
+    };
+
+    VPL_Util.webSocketMonitor = function(coninfo, title, running, externalActions) {
+        VPL_Util.setProtocol(coninfo);
+        var ws = null;
+        var pb = null;
+
+        function showErrorMessage(message) {
+            VPL_Util.showErrorMessage(message, {
+                next: externalActions.next
+            });
+        }
+        var messageActions = {
+            'message': function(content) {
+                var parsed = /^([^:]*):?(.*)/i.exec(content);
+                var state = parsed[1];
+                var detail = parsed[2];
+                if (state == 'running') {
+                    state = running;
+                }
+                var text = VPL_Util.str(state);
+                if (detail > '') {
+                    text += ': ' + detail;
+                }
+                if (externalActions.getConsole && externalActions.getConsole().isOpen()) {
+                    externalActions.getConsole().setMessage(text);
+                } else {
+                    pb.setLabel(text);
+                }
+            },
+            'compilation': function(content) {
+                if (externalActions.setResult) {
+                    externalActions.setResult({
+                        'grade': '',
+                        'compilation': content,
+                        'evaluation': '',
+                        'execution': '',
+                    }, false);
+                }
+            },
+            'retrieve': function() {
+                pb.close();
+                VPL_Util.requestAction('retrieve', '', '', externalActions.ajaxurl, function(response) {
+                    if (externalActions.setResult) {
+                        externalActions.setResult(response, true);
+                    }
+
+					if(response.grade !=''){
+						console.log(response.grade);
+						let gradetxt=response.grade;
+						    gradetxt=gradetxt.replace("Proposed grade:", "");
+							gradetxt=gradetxt.split("/");
+
+                            //Will use the below condition to display popup for xp achievement
+							/*if( (Math.round(gradetxt[0].trim())) >= (Math.round(gradetxt[1].trim())) ){
+								$('#navigationtoast').addClass("active");
+							}*/
+					}
+					if(response.toast_message)
+                    {
+
+                        $('.xp_gained_message').text(response.toast_message);
+
+                        $('#gamefyxptoast').addClass("active");
+                        $('#gamefyxptoast .progress').addClass("active");
+
+                        // Close the toast after 5 seconds automatically
+                        setTimeout(() => {
+                            $('#gamefyxptoast').removeClass("active");
+                        }, 5000)
+                        setTimeout(() => {
+                            $('#gamefyxptoast .progress').removeClass("active");
+                        }, 5300)
+                    }
+
+					// $('#navigationtoast').addClass("active");
+
+                    // // Close the toast after 5 seconds automatically
+                    // setTimeout(function() {
+                    //   $('#navigationtoast').removeClass("active");
+                    // }, 5000);
+
+                }, showErrorMessage);
+            },
+            'run': function(content) {
+                pb.close();
+                externalActions.run(content, coninfo, ws);
+            },
+            'close': function() {
+                ws.close();
+                if (externalActions.close) {
+                    externalActions.close();
+                }
+            }
+        };
+        try {
+            if (VPL_Util.supportWebSocket()) {
+                ws = new WebSocket(coninfo.monitorURL);
+            } else {
+                showErrorMessage(VPL_Util.str('browserupdate'));
+                return;
+            }
+        } catch (e) {
+            showErrorMessage(e.message);
+            return;
+        }
+        pb = new VPL_Util.progressBar(title, 'connecting', function() {
+            ws.close();
+        });
+        ws.notOpen = true;
+        ws.onopen = function(event) {
+            ws.notOpen = false;
+            pb.setLabel(VPL_Util.str('connected'));
+        };
+        ws.onerror = function(event) {
+            pb.close();
+            if (coninfo.secure && ws.notOpen) {
+
+                if(title == 'evaluate'){
+                    VPL_Util.requestAction('evaluate_no_wss', 'evaluating', {}, externalActions.ajaxurl, function(response) {
+                        externalActions.setResult(response, true);
+                    }, showErrorMessage);
+
+                }else{
+                    showErrorMessage(VPL_Util.str('conn_issue'));
+                }
+
+            } else {
+                showErrorMessage(VPL_Util.str('connection_fail'));
+            }
+        };
+        ws.onclose = function(event) {
+            if (externalActions.getConsole) {
+                externalActions.getConsole().disconnect();
+            }
+            pb.close();
+        };
+
+        ws.onmessage = function(event) {
+            var message = /^([^:]+):/i.exec(event.data);
+            if (message !== null) {
+                var action = message[1];
+                var content = event.data.substr(action.length + 1);
+                if (messageActions[action]) {
+                    messageActions[action](content);
+                }
+            } else {
+                pb.setLabel(VPL_Util.str('error') + ': ' + event.data);
+            }
+        };
+    };
+
+    VPL_Util.updateRunEvaluateButtons = function(disable) {
+        if(disable) {
+            $('#vpl_menu a#vpl_ide_evaluate, #vpl_menu a#vpl_ide_run')
+            .addClass('ui-button-disabled ui-state-disabled')
+            .attr('aria-disabled', true).attr('tabindex', '-1')
+            .attr('title', 'Terminal is running');
+        } else {
+            $('#vpl_menu a#vpl_ide_evaluate, #vpl_menu a#vpl_ide_run')
+            .removeClass('ui-button-disabled ui-state-disabled')
+            .attr('aria-disabled', false).removeAttr('tabindex');
+
+            $('#vpl_menu a#vpl_ide_run').attr('title', 'Run (Ctrl-F11)');
+            $('#vpl_menu a#vpl_ide_evaluate').attr('title', 'Evaluate (Shift-F11)');
+        }
+    }
+
+})();

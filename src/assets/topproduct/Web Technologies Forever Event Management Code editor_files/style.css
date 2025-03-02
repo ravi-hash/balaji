@@ -1,0 +1,434 @@
+a[title=Grade] {
+    display: none !important;
+}
+
+
+/* adapted from http://maxwells.github.io/bootstrap-tags.html */
+
+.tag {
+    font-size: 16px;
+    padding: .3em .4em .4em;
+    margin: 0 .1em;
+}
+
+.tag a {
+    color: #bbb;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.tag a:hover {
+    opacity: 1.0
+}
+
+.tag .remove {
+    vertical-align: bottom;
+    top: 0;
+}
+
+.tag a {
+    margin: 0 0 0 .3em;
+}
+
+.tag a .glyphicon-white {
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.centered {
+    position: fixed;
+    z-index: 100;
+    top: 50%;
+    left: 50%;
+    margin: -100px 0 0 -100px;
+    width: 200px;
+    height: 200px;
+}
+
+.required:after {
+    content: " *";
+}
+
+[role=button] {
+    cursor: pointer
+}
+
+.vpl_ide_root_fullscreen {
+    z-index: 2222222 !important;
+}
+
+#page-mod-vpl-forms-edit .ace_editor.ace_autocomplete {
+    z-index: 2222223 !important;
+}
+
+.modal-backdrop {
+    opacity: 1 !important;
+}
+
+#outputpreviousfile {
+    overflow-x: auto;
+    white-space: nowrap;
+    height: 500px;
+    margin-right: 10px;
+}
+
+#outputsourcefile {
+    overflow-x: auto;
+    white-space: nowrap;
+    border-left: 1px solid hsla(200, 10%, 50%, 100);
+    height: 500px;
+}
+
+.filediffModalClose {
+    margin-right: 1px !important;
+    padding: 10px !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+
+#filediffresult {
+    overflow-y: auto;
+    height: 500px;
+}
+
+.filediffHeader {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.description-file {
+    margin: auto !important;
+}
+
+.file-section {
+    padding: 0 !important;
+}
+
+#submissionviewtab>tbody,
+td {
+    font-size: 12px;
+    height: 30px;
+    vertical-align: middle !important;
+}
+
+#submissionviewtab.table a {
+    text-decoration: none !important;
+}
+
+/*remuiformat start*/
+
+body#page-mod-vpl-view .container-fluid #region-main .card,
+body#page-mod-vpl-forms-edit .container-fluid #region-main .card,
+body#page-mod-vpl-forms-submissionview .container-fluid #region-main .card,
+body#page-mod-vpl-forms-submission .container-fluid #region-main .card,
+body#page-mod-vpl-views-submissionslist .container-fluid #region-main .card,
+body#page-mod-vpl-similarity-similarity_form .container-fluid #region-main .card {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+body#page-mod-vpl-view #page-navbar, body#page-mod-vpl-forms-edit #page-navbar,
+body#page-mod-vpl-forms-submissionview #page-navbar, body#page-mod-vpl-forms-submission #page-navbar, 
+body#page-mod-vpl-views-submissionslist #page-navbar, body#page-mod-vpl-similarity-similarity_form #page-navbar {
+    display: none;
+}
+body#page-mod-vpl-view #region-main .card-body:first-child, body#page-mod-vpl-forms-edit #region-main .card-body:first-child,
+body#page-mod-vpl-forms-submissionview #region-main .card-body:first-child, 
+body#page-mod-vpl-forms-submission #region-main .card-body:first-child, 
+body#page-mod-vpl-views-submissionslist #region-main .card-body:first-child, 
+body#page-mod-vpl-similarity-similarity_form #region-main .card-body:first-child,
+body#page-mod-vpl-view #region-main-box, body#page-mod-vpl-forms-edit #region-main-box,
+body#page-mod-vpl-forms-submissionview #region-main-box, body#page-mod-vpl-forms-submission #region-main-box, 
+body#page-mod-vpl-views-submissionslist #region-main-box, body#page-mod-vpl-similarity-similarity_form #region-main-box {
+    padding: unset !important;
+    margin: unset !important;
+}
+/*#page-header .card:first-child {
+    display: none !important;
+}*/
+body#page-mod-vpl-view .course-cover-image,
+body#page-mod-vpl-forms-submissionview .course-cover-image, body#page-mod-vpl-forms-submission .course-cover-image, 
+body#page-mod-vpl-views-submissionslist .course-cover-image, body#page-mod-vpl-similarity-similarity_form .course-cover-image {
+    /*background: linear-gradient(90deg, #610294 56%, #e45688 100%) !important;*/
+    min-height: 75px !important;
+    margin-bottom: 2rem !important;
+}
+body#page-mod-vpl-view .course-cover-image div[data-region="activity-information"],
+body#page-mod-vpl-forms-edit .course-cover-image div[data-region="activity-information"],
+body#page-mod-vpl-forms-submissionview .course-cover-image div[data-region="activity-information"], 
+body#page-mod-vpl-forms-submission .course-cover-image div[data-region="activity-information"],
+body#page-mod-vpl-views-submissionslist .course-cover-image div[data-region="activity-information"],
+body#page-mod-vpl-similarity-similarity_form .course-cover-image div[data-region="activity-information"] {
+    border-bottom: 0px !important;
+    color: #fff !important;
+}
+body#page-mod-vpl-view .course-cover-image img, body#page-mod-vpl-forms-edit .course-cover-image img,
+body#page-mod-vpl-forms-submissionview .course-cover-image img, body#page-mod-vpl-forms-submission .course-cover-image img, 
+body#page-mod-vpl-views-submissionslist .course-cover-image img, body#page-mod-vpl-similarity-similarity_form .course-cover-image img {
+    position: relative;
+    top: -8px;
+}
+.box.generalbox {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    /* color: #58595B; */
+    /*opacity: 0.8;*/
+}
+body#page-mod-vpl-view #nav-drawer, body#page-mod-vpl-forms-edit #nav-drawer, body#page-mod-vpl-forms-submissionview #nav-drawer, 
+body#page-mod-vpl-forms-submission #nav-drawer, body#page-mod-vpl-views-submissionslist #nav-drawer, 
+body#page-mod-vpl-similarity-similarity_form #nav-drawer {
+    top: 75px !important;
+    height: 100% !important;
+}
+body {
+    overflow-x: hidden !important;
+}
+body#page-mod-vpl-view .activity-title-ellipses,body#page-mod-vpl-forms-edit .activity-title-ellipses,
+body#page-mod-vpl-forms-submissionview .activity-title-ellipses, body#page-mod-vpl-forms-submission .activity-title-ellipses, 
+body#page-mod-vpl-views-submissionslist .activity-title-ellipses, 
+body#page-mod-vpl-similarity-similarity_form .activity-title-ellipses {
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden !important;
+}
+body#page-mod-vpl-view  #region-main .card-body, body#page-mod-vpl-forms-edit  #region-main .card-body,
+body#page-mod-vpl-forms-submissionview  #region-main .card-body, body#page-mod-vpl-forms-submission  #region-main .card-body, 
+body#page-mod-vpl-views-submissionslist #region-main .card-body, body#page-mod-vpl-similarity-similarity_form #region-main .card-body {
+    padding: 0px!important;
+}
+body#page-mod-vpl-view #page-wrapper .wdm-generalsectiontitle h1, 
+body#page-mod-vpl-forms-edit #page-wrapper .wdm-generalsectiontitle h1, 
+body#page-mod-vpl-forms-submissionview #page-wrapper .wdm-generalsectiontitle h1, 
+body#page-mod-vpl-forms-submission #page-wrapper .wdm-generalsectiontitle h1,
+body#page-mod-vpl-views-submissionslist #page-wrapper .wdm-generalsectiontitle h1,
+body#page-mod-vpl-similarity-similarity_form #page-wrapper .wdm-generalsectiontitle h1 {
+    font-size: 48px;
+}
+@media only screen and (max-width:1050px) {
+    body#page-mod-vpl-view #page-wrapper .wdm-generalsectiontitle h1,
+    body#page-mod-vpl-forms-edit #page-wrapper .wdm-generalsectiontitle h1,
+    body#page-mod-vpl-forms-submissionview #page-wrapper .wdm-generalsectiontitle h1, 
+    body#page-mod-vpl-forms-submission #page-wrapper .wdm-generalsectiontitle h1,
+    body#page-mod-vpl-views-submissionslist #page-wrapper .wdm-generalsectiontitle h1,
+    body#page-mod-vpl-similarity-similarity_form #page-wrapper .wdm-generalsectiontitle h1 {
+        font-size : 24px !important;
+        /* margin-left: 25px !important; */
+    }
+    /*body#page-mod-vpl-view .activity-title-ellipses,body#page-mod-vpl-edit .activity-title-ellipses,
+    body#page-mod-vpl-forms-submissionview .activity-title-ellipses, body#page-mod-vpl-forms-submission .activity-title-ellipses {
+
+        margin-left: 3rem !important;
+
+    }*/
+}
+body#page-mod-vpl-view .popover, body#page-mod-vpl-forms-edit .popover, body#page-mod-vpl-forms-submissionview .popover, 
+body#page-mod-vpl-forms-submission .popover, body#page-mod-vpl-views-submissionslist .popover, 
+body#page-mod-vpl-similarity-similarity_form .popover {
+    background-color: #000 !important;
+}
+body#page-mod-vpl-view .bs-popover-top>.arrow::after, body#page-mod-vpl-forms-edit .bs-popover-top>.arrow::after, 
+body#page-mod-vpl-forms-submissionview .bs-popover-top>.arrow::after, body#page-mod-vpl-forms-submission .bs-popover-top>.arrow::after, 
+body#page-mod-vpl-views-submissionslist .bs-popover-top>.arrow::after, 
+body#page-mod-vpl-similarity-similarity_form .bs-popover-top>.arrow::after {
+    color: #000;
+    border-bottom-color : #000 !important;
+}
+body#page-mod-vpl-view .popover .arrow::before, body#page-mod-vpl-forms-submissionview .popover .arrow::before,
+body#page-mod-vpl-forms-edit .popover .arrow::before, body#page-mod-vpl-forms-submission .popover .arrow::before, 
+body#page-mod-vpl-views-submissionslist .popover .arrow::before, body#page-mod-vpl-similarity-similarity_form .popover .arrow::before,
+body#page-mod-vpl-view .popover .arrow::after, body#page-mod-vpl-forms-edit .popover .arrow::after,
+body#page-mod-vpl-forms-submissionview .popover .arrow::after,
+body#page-mod-vpl-forms-submission .popover .arrow::after, body#page-mod-vpl-views-submissionslist .popover .arrow::after, 
+body#page-mod-vpl-similarity-similarity_form .popover .arrow::after {
+    color: #000;
+    border-bottom-color : #000 !important;
+    border-top-color : #000 !important;
+}
+body#page-mod-vpl-view .popover-body, body#page-mod-vpl-forms-edit .popover-body, body#page-mod-vpl-forms-submissionview .popover-body, 
+body#page-mod-vpl-forms-submission .popover-body, body#page-mod-vpl-views-submissionslist .popover-body, 
+body#page-mod-vpl-similarity-similarity_form .popover-body {
+    color: #FFF !important;
+}
+body#page-mod-vpl-view .bs-popover-bottom .arrow, body#page-mod-vpl-forms-edit .bs-popover-bottom .arrow,
+body#page-mod-vpl-forms-submissionview .bs-popover-bottom .arrow, body#page-mod-vpl-forms-submission .bs-popover-bottom .arrow, 
+body#page-mod-vpl-views-submissionslist .bs-popover-bottom .arrow, 
+body#page-mod-vpl-similarity-similarity_form .bs-popover-bottom .arrow, 
+body#page-mod-vpl-view .bs-popover-auto[x-placement^="bottom"] .arrow, 
+body#page-mod-vpl-forms-edit .bs-popover-auto[x-placement^="bottom"] .arrow,
+body#page-mod-vpl-forms-submissionview .bs-popover-auto[x-placement^="bottom"] .arrow,
+body#page-mod-vpl-forms-submission .bs-popover-auto[x-placement^="bottom"] .arrow,
+body#page-mod-vpl-views-submissionslist .bs-popover-auto[x-placement^="bottom"] .arrow,
+body#page-mod-vpl-similarity-similarity_form .bs-popover-auto[x-placement^="bottom"] .arrow {
+    top: -2px !important;
+}
+body#page-mod-vpl-view .bs-popover-bottom>.arrow::after, body#page-mod-vpl-forms-edit .bs-popover-bottom>.arrow::after,
+body#page-mod-vpl-forms-submissionview .bs-popover-bottom>.arrow::after, 
+body#page-mod-vpl-forms-submission .bs-popover-bottom>.arrow::after, 
+body#page-mod-vpl-views-submissionslist .bs-popover-bottom>.arrow::after,
+body#page-mod-vpl-similarity-similarity_form .bs-popover-bottom>.arrow::after, 
+body#page-mod-vpl-view .bs-popover-auto[x-placement^="bottom"]>.arrow::after,
+body#page-mod-vpl-forms-edit .bs-popover-auto[x-placement^="bottom"]>.arrow::after,
+body#page-mod-vpl-forms-submissionview .bs-popover-auto[x-placement^="bottom"]>.arrow::after,
+body#page-mod-vpl-forms-submission .bs-popover-auto[x-placement^="bottom"]>.arrow::after,
+body#page-mod-vpl-views-submissionslist .bs-popover-auto[x-placement^="bottom"]>.arrow::after,
+body#page-mod-vpl-similarity-similarity_form .bs-popover-auto[x-placement^="bottom"]>.arrow::after {
+    border-bottom-color : #000 !important;
+}
+/*remuiformat end*/
+
+.nav-tabs {
+    border-bottom: 1px solid #5C5C5C;
+    position: relative;
+}
+@media only screen and (min-width:992px) {
+    .nav-tabs {
+        border-bottom: 1px solid #5C5C5C;
+        position: relative;
+        height: 36px;
+        width: 80%;
+    }
+
+    .nav-tabs>li {
+        margin-right: 30px !important;
+    }
+}
+
+@media only screen and (min-width:768px) and (max-width:992px){
+    .nav-tabs {
+        border-bottom: 1px solid #5C5C5C;
+        position: relative;
+        height: 40px;
+        width: 100%;
+    }
+
+    .nav-tabs>li {
+        margin-right: 30px !important;
+    }
+}
+.nav-tabs .nav-link {
+    padding: 0;
+    padding-bottom: 12px;
+    font-size: 16px !important;
+    display: block;
+    border: none;
+}
+
+.nav-tabs a.nav-link:hover:after, .nav-tabs a.nav-link.active:after, .nav-tabs a.nav-link.active:hover:after, .nav-tabs a.nav-link.active:active:after, .nav-tabs a.nav-link.active:focus:after {
+    height: 4px !important;
+    border-radius: 2.5px;
+}
+
+.nav-tabs a.nav-link:hover, .nav-tabs a.nav-link.active, .nav-tabs a.nav-link.active:hover, .nav-tabs a.nav-link.active:active, .nav-tabs a.nav-link.active:focus {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+body.path-mod .nav-tabs .nav-link:hover:after, body.path-mod .nav-tabs .nav-link.active:after, body.path-mod .nav-tabs .nav-link.active:hover:after, body.path-mod .nav-tabs .nav-link.active:active:after, body.path-mod .nav-tabs .nav-link.active:focus:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 4px !important;
+    border-radius: 2.5px;
+    margin-top: 8px;
+    background: linear-gradient(80.83deg, #FFFFFF -142.47%, #874EFF -142.45%, #F05965 101.49%);
+    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+}
+
+body.path-mod .nav-tabs .nav-link.active {
+    background-color: transparent !important;
+}
+
+body.path-mod-vpl-forms .box.generalbox {
+    padding: 0 !important;
+}
+
+#page-mod-vpl-forms-edit #vpl-user-floating-icons,
+#page-mod-vpl-forms-submissionview #vpl-user-floating-icons, #page-mod-vpl-forms-submission #vpl-user-floating-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #fff;
+    padding: 1em;
+    position: fixed;
+    top: 35%;
+    right: 0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    z-index: 1;
+    box-shadow: -5px 0px 4px rgba(0, 0, 0, 0.4), 0px 7px 13px -3px rgba(0, 0, 0, 0.3), 5px 0px 0px rgba(0, 0, 0, 0.2);
+}
+
+body#page-mod-vpl-view.light-mode .container-fluid #region-main,
+body#page-mod-vpl-forms-edit.light-mode .container-fluid #region-main,
+body#page-mod-vpl-forms-submissionview.light-mode .container-fluid #region-main,
+body#page-mod-vpl-forms-submission.light-mode .container-fluid #region-main,
+body#page-mod-vpl-views-submissionslist.light-mode .container-fluid #region-main,
+body#page-mod-vpl-similarity-similarity_form.light-mode .container-fluid #region-main {
+    background: var(--light-main-primary) !important;
+    border: 0;
+}
+
+body#page-mod-vpl-forms-edit.sysrole-learner #page-header > div {
+    display: none;
+}
+
+body#page-mod-vpl-forms-edit.sysrole-learner, body#page-mod-vpl-forms-edit #region-main {
+    overflow: hidden !important;
+}
+
+body#page-mod-vpl-forms-edit #page > #page-content {
+    padding: 0;
+}
+
+body.path-mod div.course-cover-image {
+    display: none;
+}
+
+body#page-mod-vpl-forms-edit.dark-mode .container-fluid #region-main {
+    background: #1c233d !important;
+}
+
+body#page-mod-vpl-forms-edit.dark-mode .vpl-ide-content-wrapper{
+    background: #1c233d !important;
+}
+
+body.path-mod pre {
+    color: unset;
+}
+#page-mod-vpl-basedon .select2-container{
+    width : 86% !important;
+}
+
+#page-mod-vpl-basedon .id_basedonactivity {
+    width : 100% !important;
+}
+.max-grade, .generaltable tbody tr.max-grade:hover, 
+body.light-mode .generaltable tbody tr.max-grade,
+body.light-mode .generaltable tbody tr.max-grade td a{
+    background-color: #28a745 !important;
+    color: #fff !important;
+}
+
+.max-grade a{
+    color: #fff !important;
+}
+
+#xp-toast-message .text-bg-success i.fa.fa-close {
+    color: #fff;
+    margin-left: 10px;
+    font-weight: lighter;
+}
+
+#xp-toast-message .text-bg-success {
+    top: 20% !important;
+    background: #4caf50 !important;
+    transition: none !important;
+    border-radius: 5px !important;
+}
+
+body.path-mod-vpl .modal.show {
+    background: #000;
+}

@@ -1,0 +1,74 @@
+.admin-controller {
+  max-width: 600px; // Set a max width for the controller
+  margin: 60px auto; // Center the controller on the page and give top and bottom margin
+  padding: 20px; // Add padding for spacing
+  border: 1px solid #ddd; // Light gray border
+  border-radius: 40px; // Rounded corners
+  background-color: #f9f9f9; // Light background color
+  margin-bottom: 120px; // Space from the footer
+
+  h2 {
+    text-align: center; // Center the heading
+    margin-bottom: 20px; // Space below the heading
+    color: #333; // Darker text color for better readability
+    margin-top: 0; // Remove top margin
+    font-size: 24px; // Increase font size for emphasis
+    text-shadow: 0 0 10px rgba(0, 128, 255, 0.8), // Blue glow
+                 0 0 20px rgba(0, 128, 255, 0.6); // Larger blue glow
+  }
+
+  form {
+    display: flex; // Use flexbox for layout
+    flex-direction: column; // Stack items vertically
+    gap: 15px; // Space between form elements
+    margin-top: 0; // Remove extra margin-top
+    font-size: 19px;
+    color: #444; // Slightly darker text for readability
+    text-shadow: 0 0 5px rgba(255, 165, 0, 0.6), // Orange glow
+                 0 0 10px rgba(255, 165, 0, 0.4); // Larger orange glow
+
+    div {
+      display: flex; // Use flex for individual form groups
+      flex-direction: column; // Stack label and input vertically
+
+      label {
+        margin-bottom: 5px; // Space between label and input
+        font-weight: bold; // Bold label text
+        color: #555; // Darker color for labels
+        
+      }
+
+      input[type="file"] {
+        border: 1px solid #ccc; // Light gray border for file input
+        border-radius: 4px; // Slightly rounded corners
+        padding: 10px; // Padding for file input
+        cursor: pointer; // Pointer cursor on hover
+      }
+
+      textarea {
+        border: 1px solid #ccc; // Light gray border for textarea
+        border-radius: 4px; // Slightly rounded corners
+        padding: 10px; // Padding for textarea
+        min-height: 100px; // Minimum height for the textarea
+        resize: vertical; // Allow vertical resizing
+        font-family: Arial, sans-serif; // Font for textarea
+      }
+    }
+
+    button {
+      background-color: #28a745; // Green background for the button
+      color: white; // White text color
+      border: none; // No border
+      border-radius: 4px; // Rounded corners
+      padding: 10px; // Padding for button
+      cursor: pointer; // Pointer cursor on hover
+      font-size: 16px; // Larger font size
+      text-shadow: 0 0 5px rgba(0, 255, 0, 0.6), // Green glow
+                   0 0 10px rgba(0, 255, 0, 0.4); // Larger green glow
+
+      &:hover {
+        background-color: #0d6dbb; // Darker green on hover
+      }
+    }
+  }
+}

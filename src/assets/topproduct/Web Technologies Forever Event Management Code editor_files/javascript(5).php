@@ -1,0 +1,1 @@
+$(document).ready(function(){setTimeout((function(){$('[data-toggle="popover"]').tooltip()}),1000);var vplSelector=$('body#page-mod-vpl-view div.box.generalbox');vplSelector.each(function(index){if($(this).text().length===0){$(this).addClass('d-none')}})})

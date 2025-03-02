@@ -1,0 +1,9 @@
+b {
+  color: black;
+}
+
+@media screen and (max-width: "900px") {
+  .disable {
+    display: none;
+  }
+}
