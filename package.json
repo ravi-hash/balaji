@@ -44,7 +44,8 @@
     "swiper": "^11.1.14",
     "tailwind-merge": "^2.5.2",
     "uuid": "^9.0.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "winget": "^0.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -72,6 +73,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "html-loader": "^5.1.0"
+    "html-loader": "^5.1.0",
+    "webpack-cli": "^6.0.1"
   }
 }

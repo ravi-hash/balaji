@@ -11,13 +11,25 @@ const Slide = () => {
         <div className="content-carrousel">
           <figure className="shadow">
             <img
-              src="https://i.postimg.cc/xTZY77mL/hp-gas-logo-6-F3371-B24-B-seeklogo-com-removebg-preview.png"
+              src="https://pmrconline.in/logo.png"
               alt="Slide 1"
             />
           </figure>
           <figure className="shadow">
             <img
-              src="https://i.postimg.cc/xTZY77mL/hp-gas-logo-6-F3371-B24-B-seeklogo-com-removebg-preview.png"
+              src="https://www.hindustanpetroleum.com/images/logo.png"
+              alt="Slide 2"
+            />
+          </figure>
+          <figure className="shadow">
+            <img
+              src="https://iocl.com/assets/images/logo.gif"
+              alt="Slide 2"
+            />
+          </figure>
+          <figure className="shadow">
+            <img
+              src="https://state.bihar.gov.in/main/cache/1/SLIDER/bihar-logo-red.png"
               alt="Slide 2"
             />
           </figure>
@@ -29,19 +41,7 @@ const Slide = () => {
           </figure>
           <figure className="shadow">
             <img
-              src="https://i.postimg.cc/xTZY77mL/hp-gas-logo-6-F3371-B24-B-seeklogo-com-removebg-preview.png"
-              alt="Slide 2"
-            />
-          </figure>
-          <figure className="shadow">
-            <img
-              src="https://i.postimg.cc/xTZY77mL/hp-gas-logo-6-F3371-B24-B-seeklogo-com-removebg-preview.png"
-              alt="Slide 2"
-            />
-          </figure>
-          <figure className="shadow">
-            <img
-              src="https://i.postimg.cc/xTZY77mL/hp-gas-logo-6-F3371-B24-B-seeklogo-com-removebg-preview.png"
+              src="https://nhai.gov.in/assets/images/clientlogo4.png"
               alt="Slide 2"
             />
           </figure>
