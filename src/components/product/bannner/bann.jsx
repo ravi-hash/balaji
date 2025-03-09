@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
-import './bann.scss';
+import React from "react";
+import { Link } from "react-router-dom"; // Import Link for navigation
+import "./bann.scss";
 
 const Bann = () => {
   return (
@@ -30,18 +30,8 @@ const Bann = () => {
       </div>
 
       {/* 4th Banner */}
-      <div className="bann3">
-      
-        <div className="bann__content3">
-          
-        </div>
-      </div>
-
-       {/* 4th Banner */}
       <div className="bann4">
-        <div className="bann__content4">
-          
-        </div>
+        <div className="bann__content4"></div>
       </div>
     </div>
   );

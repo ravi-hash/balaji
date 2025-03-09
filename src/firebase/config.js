@@ -4,12 +4,15 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyC8eV4qPbETaMPX18a3ZGqXnaJYbR8xuOg",
-  authDomain: "balajii-b7919.firebaseapp.com",
-  projectId: "balajii-b7919",
-  storageBucket: "balajii-b7919.appspot.com",
-  messagingSenderId: "968238605726",
-  appId: "1:968238605726:web:a72aaa8f83807f4bf2e28f"
+  apiKey: "AIzaSyAZbCokWjMtk0iQA-MwU-LV7yIJOeMAm4U",
+  authDomain: "aipower-e323e.firebaseapp.com",
+  databaseURL:
+    "https://aipower-e323e-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "aipower-e323e",
+  storageBucket: "aipower-e323e.firebasestorage.app",
+  messagingSenderId: "642451576660",
+  appId: "1:642451576660:web:219567f1ff58a4f9b09ac1",
+  measurementId: "G-F8NNX8XX6G",
 };
 
 // Initialize Firebase

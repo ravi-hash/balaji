@@ -1,14 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const adminSlice = createSlice({
-  name: 'admin',
+  name: "admin",
   initialState: {
     headerLogo: null,
-    aboutUsContent: '',
-    contactInfo: { // New state for contact info
-      email: 'example@outlook.com',
-      phone: '+91-.......',
-      location: 'Danapur, Bihar, India',
+    aboutUsContent: "",
+    contactInfo: {
+      // New state for contact info
+      email: "theprint007@gmail.com",
+      phone: "+91-9102490062, 9304060062",
+      location:
+        "G -3, S.B.I Building , Garikhana, Khagaul,Danapur, Bihar, India",
     },
   },
   reducers: {
@@ -29,6 +31,7 @@ export const selectHeaderLogo = (state) => state.admin.headerLogo;
 export const selectAboutUsContent = (state) => state.admin.aboutUsContent;
 export const selectContactInfo = (state) => state.admin.contactInfo; // New selector for contact info
 
-export const { updateHeaderLogo, updateAboutUsContent, updateContactInfo } = adminSlice.actions;
+export const { updateHeaderLogo, updateAboutUsContent, updateContactInfo } =
+  adminSlice.actions;
 
 export default adminSlice.reducer;

@@ -23,7 +23,7 @@ const ProductDetails = () => {
   const cartItems = useSelector(selectCartItems);
   const { document } = useFetchDocument("products", id);
   const { data: reviews } = useFetchCollection("reviews");
-  
+
   const filteredReviews = reviews.filter((review) => review.productID === id);
   const cart = cartItems.find((cart) => cart.id === id);
   const isCartAdded = cartItems.some((cart) => cart.id === id);
@@ -42,42 +42,46 @@ const ProductDetails = () => {
   }, [document]);
 
   // Example of adding an item to the cart with specifications
-const addToCart = () => {
+  const addToCart = () => {
+    // Ensure product and other variables exist to prevent errors
     const orderMessage = `Hello, I would like to purchase the following product:
-    - **Product Name**: ${product?.name}
-    - **Price**: ${formatPrice(product?.price)}
-    - **Color**: ${color}
-    - **Size**: ${size}
-    - **Recipient Name**: ${recipientName}
-    - **Message**: ${message}
-    - **image**: ${image}    
-    
-    Please confirm the details.`;
-  
-    const whatsappURL = `https://wa.me/9304060062?text=${encodeURIComponent(orderMessage)}`;
-  
+      - **Product Name**: ${product?.name || "Not available"}
+      - **Price**: ${
+        product?.price ? formatPrice(product.price) : "Price not available"
+      }
+      - **Color**: ${color || "Not specified"}
+      - **Size**: ${size || "Not specified"}
+      - **Recipient Name**: ${recipientName || "Not specified"}
+      - **Message**: ${message || "No message"}
+      - **Image**: ${image || "No image"}    
+      
+      Please confirm the details.`;
+
+    const whatsappURL = `https://wa.me/919304060062?text=${encodeURIComponent(
+      orderMessage
+    )}`;
+
+    // Redirect to WhatsApp
     window.location.href = whatsappURL;
-  
+
     // Reset the specifications after redirecting
     setColor("");
     setSize("");
     setRecipientName("");
     setMessage("");
     setImage(null);
-};
-  
-
-
+  };
 
   const decreaseCart = () => {
     dispatch(DECREASE_CART(cart));
     dispatch(CALCULATE_TOTAL_QUANTITY());
   };
 
-  const formatPrice = (price) => new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-  }).format(price);
+  const formatPrice = (price) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(price);
 
   const capitalizeFirstLowercaseRest = (str) => {
     if (!str) return "";
@@ -102,9 +106,7 @@ const addToCart = () => {
               </div>
               <div className="product-details__content">
                 <h3>{capitalizeFirstLowercaseRest(product?.name)}</h3>
-                <p className="product-details__description">
-                  {product?.desc}
-                </p>
+                <p className="product-details__description">{product?.desc}</p>
                 <p className="product-details__price">
                   {formatPrice(product?.price)}
                 </p>
@@ -172,7 +174,10 @@ const addToCart = () => {
                 <div className="general-specifications__row">
                   <div className="general-specifications__row-key">Color</div>
                   <div className="general-specifications__row-value">
-                    <select value={color} onChange={(e) => setColor(e.target.value)}>
+                    <select
+                      value={color}
+                      onChange={(e) => setColor(e.target.value)}
+                    >
                       <option value="">Select a color</option>
                       <option value="Red">Red</option>
                       <option value="Blue">Blue</option>
@@ -191,7 +196,10 @@ const addToCart = () => {
                 <div className="general-specifications__row">
                   <div className="general-specifications__row-key">Size</div>
                   <div className="general-specifications__row-value">
-                    <select value={size} onChange={(e) => setSize(e.target.value)}>
+                    <select
+                      value={size}
+                      onChange={(e) => setSize(e.target.value)}
+                    >
                       <option value="">Select a size</option>
                       <option value="Small">Small</option>
                       <option value="Medium">Medium</option>
@@ -208,7 +216,9 @@ const addToCart = () => {
 
                 {/* Recipient's Name */}
                 <div className="general-specifications__row">
-                  <div className="general-specifications__row-key">Recipient's Name</div>
+                  <div className="general-specifications__row-key">
+                    Recipient's Name
+                  </div>
                   <div className="general-specifications__row-value">
                     <input
                       type="text"
@@ -221,7 +231,9 @@ const addToCart = () => {
 
                 {/* Message/Details */}
                 <div className="general-specifications__row">
-                  <div className="general-specifications__row-key">Message/Details</div>
+                  <div className="general-specifications__row-key">
+                    Message/Details
+                  </div>
                   <div className="general-specifications__row-value">
                     <textarea
                       placeholder="Enter your message or details"
