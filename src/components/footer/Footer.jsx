@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase/config"; // Ensure correct import
 import "./Footer.scss";
 import { useLocation } from "react-router-dom";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { useSelector } from "react-redux";
-import {
-  selectAboutUsContent,
-  selectContactInfo,
-} from "../../redux/slice/adminSlice"; // Adjust the path if necessary
 
 const Footer = () => {
   const location = useLocation();
@@ -19,8 +16,31 @@ const Footer = () => {
     message: "",
   });
 
-  const aboutUsContent = useSelector(selectAboutUsContent);
-  const contactInfo = useSelector(selectContactInfo); // Fetching the contact info from Redux
+  const [aboutUsContent, setAboutUsContent] = useState("");
+  const [contactInfo, setContactInfo] = useState({ email: "", phone: "", location: "" });
+
+  // Fetch footer content directly from Firestore
+  useEffect(() => {
+    const fetchFooterContent = async () => {
+      try {
+        const footerRef = doc(db, "settings", "footer");
+        const footerSnap = await getDoc(footerRef);
+        if (footerSnap.exists()) {
+          const data = footerSnap.data();
+          setAboutUsContent(data.aboutUsContent || "We are dedicated to providing quality products with a seamless shopping experience.");
+          setContactInfo({
+            email: data.email || "theprint007@gmail.com",
+            phone: data.phone || "+91- 9102490062, 9304060062",
+            location: data.location || "G - 3. S.B.I Building, Garikhana, Khagaul, Patna - 801105",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching footer content:", error);
+      }
+    };
+
+    fetchFooterContent();
+  }, []);
 
   const handleChange = (e) => {
     setContactForm({ ...contactForm, [e.target.name]: e.target.value });
@@ -54,16 +74,13 @@ const Footer = () => {
           <div className="footer__section">
             <h4 style={{ fontSize: "18px", marginBottom: "10px" }}>About Us</h4>
             <p style={{ fontSize: "16px", lineHeight: "24px" }}>
-              {aboutUsContent ||
-                "We are dedicated to providing quality products with a seamless shopping experience."}
+              {aboutUsContent}
             </p>
           </div>
 
           {/* Contact Us Section */}
           <div className="footer__section">
-            <h4 style={{ fontSize: "18px", marginBottom: "10px" }}>
-              Contact Us
-            </h4>
+            <h4 style={{ fontSize: "18px", marginBottom: "10px" }}>Contact Us</h4>
             <p style={{ fontSize: "16px", lineHeight: "24px" }}>
               <FaEnvelope style={{ marginRight: "10px" }} />
               Email: {contactInfo.email}
@@ -94,7 +111,7 @@ const Footer = () => {
             Build Your Website with Us
           </h4>
           <h4>
-            If you need a website similar to like this
+            If you need a website similar to this
             <br /> feel free to reach out!
             <br />
             Email: ravii.krr62@gmail.com
@@ -147,10 +164,7 @@ const Footer = () => {
         </div>
 
         <div className="footer__bottom">
-          <p
-            className="footer__light-color"
-            style={{ fontSize: "14px", lineHeight: "20px" }}
-          >
+          <p className="footer__light-color" style={{ fontSize: "14px", lineHeight: "20px" }}>
             © 2024 Balaji. All rights Reserved.
           </p>
         </div>

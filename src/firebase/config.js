@@ -1,24 +1,30 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { Client, Storage } from "appwrite"; // Import Appwrite SDK
 
-export const firebaseConfig = {
-  apiKey: "AIzaSyAZbCokWjMtk0iQA-MwU-LV7yIJOeMAm4U",
-  authDomain: "aipower-e323e.firebaseapp.com",
-  databaseURL:
-    "https://aipower-e323e-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "aipower-e323e",
-  storageBucket: "aipower-e323e.firebasestorage.app",
-  messagingSenderId: "642451576660",
-  appId: "1:642451576660:web:219567f1ff58a4f9b09ac1",
-  measurementId: "G-F8NNX8XX6G",
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyB4psSpgVEUmMvkrPzKxYvc2Q526gfQ-JU",
+  authDomain: "balaji-b711b.firebaseapp.com",
+  projectId: "balaji-b711b",
+  storageBucket: "balaji-b711b.firebasestorage.app",
+  messagingSenderId: "196444199725",
+  appId: "1:196444199725:web:19fd8aa042ec97fa2e11a4",
+  measurementId: "G-G5WB3Q68LC",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const storage = getStorage(app);
+
+// Appwrite Config
+const client = new Client();
+client
+  .setEndpoint("https://cloud.appwrite.io/v1") // Appwrite Endpoint
+  .setProject("67cd705d00240a4d87ee"); // Appwrite Project ID
+
+export const storage = new Storage(client);
 
 export default app;

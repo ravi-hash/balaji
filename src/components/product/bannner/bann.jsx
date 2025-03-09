@@ -29,10 +29,7 @@ const Bann = () => {
         </div>
       </div>
 
-      {/* 4th Banner */}
-      <div className="bann4">
-        <div className="bann__content4"></div>
-      </div>
+     
     </div>
   );
 };
