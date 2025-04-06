@@ -17,7 +17,11 @@ const Footer = () => {
   });
 
   const [aboutUsContent, setAboutUsContent] = useState("");
-  const [contactInfo, setContactInfo] = useState({ email: "", phone: "", location: "" });
+  const [contactInfo, setContactInfo] = useState({
+    email: "",
+    phone: "",
+    location: "",
+  });
 
   // Fetch footer content directly from Firestore
   useEffect(() => {
@@ -27,11 +31,17 @@ const Footer = () => {
         const footerSnap = await getDoc(footerRef);
         if (footerSnap.exists()) {
           const data = footerSnap.data();
-          setAboutUsContent(data.aboutUsContent || "We are dedicated to providing quality products with a seamless shopping experience.");
+          setAboutUsContent(
+            data.aboutUsContent ||
+              "We are dedicated to providing quality products with a seamless shopping experience."
+          );
           setContactInfo({
-            email: data.email || "theprint007@gmail.com",
-            phone: data.phone || "+91- 9102490062, 9304060062",
-            location: data.location || "G - 3. S.B.I Building, Garikhana, Khagaul, Patna - 801105",
+            email:
+              data.email || "theprint007@gmail.com, bsnt.pandey007@gmail.com",
+            phone: data.phone || "+91- 9304060062, +91 9102490062",
+            location:
+              data.location ||
+              "G-3, S.B.I Bank(DRM Off.), Near Danapur Railway Station, Garikhana, Khagaul, Patna, Bihar (INDIA) - 801105",
           });
         }
       } catch (error) {
@@ -80,7 +90,9 @@ const Footer = () => {
 
           {/* Contact Us Section */}
           <div className="footer__section">
-            <h4 style={{ fontSize: "18px", marginBottom: "10px" }}>Contact Us</h4>
+            <h4 style={{ fontSize: "18px", marginBottom: "10px" }}>
+              Contact Us
+            </h4>
             <p style={{ fontSize: "16px", lineHeight: "24px" }}>
               <FaEnvelope style={{ marginRight: "10px" }} />
               Email: {contactInfo.email}
@@ -164,7 +176,10 @@ const Footer = () => {
         </div>
 
         <div className="footer__bottom">
-          <p className="footer__light-color" style={{ fontSize: "14px", lineHeight: "20px" }}>
+          <p
+            className="footer__light-color"
+            style={{ fontSize: "14px", lineHeight: "20px" }}
+          >
             © 2024 Balaji. All rights Reserved.
           </p>
         </div>
